@@ -1,4 +1,4 @@
-package de.misc;
+package de.otori.misc;
 
 import java.awt.Color;
 

@@ -1,3 +1,4 @@
+package de.otori.mandelbrot;
 
 public class ComplexNumber {
 

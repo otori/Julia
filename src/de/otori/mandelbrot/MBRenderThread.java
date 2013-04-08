@@ -1,13 +1,13 @@
+package de.otori.mandelbrot;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
-import de.misc.ColorFun;
+import de.otori.misc.ColorFun;
 
 
 public class MBRenderThread extends Thread {
-
-	private final BufferedImage biImage;
+	
 	private final int x, y, renderWidth, renderHeight;
 	final byte[] pixelArray;
 	final int winWidth, winHeight;
@@ -15,7 +15,6 @@ public class MBRenderThread extends Thread {
 	
 	public MBRenderThread(BufferedImage biImage, int x, int y, int renderWidth, int renderHeight)
 	{
-		this.biImage = biImage;
 		this.x = x;
 		this.y = y;
 		this.renderWidth = renderWidth;

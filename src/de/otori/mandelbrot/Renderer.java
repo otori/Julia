@@ -1,16 +1,13 @@
-import java.awt.Color;
+package de.otori.mandelbrot;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
-import de.misc.ColorFun;
 
 public class Renderer extends JPanel implements ActionListener{
 
@@ -40,8 +37,7 @@ public class Renderer extends JPanel implements ActionListener{
 		int renderHeight = height / iThreads;
 		for(int i = 0; i < iThreads; i++)
 		{
-			renderer[i] = new MBRenderThread(mbImage, 0, i * renderHeight, width, renderHeight);
-			System.out.println("" + 0 + "," + i * renderHeight + "," + width + "," + renderHeight);			
+			renderer[i] = new MBRenderThread(mbImage, 0, i * renderHeight, width, renderHeight);						
 		}
 	}
 	
