@@ -6,7 +6,7 @@ public class Mandelbrot {
 	
 	public static final int MAX_ITER = 40;
 	
-	public static int isInMandel(ComplexNumber cn)
+	public static int isInMandel(final ComplexNumber cn)
 	{
 		int iteration = 1;
 		
@@ -26,7 +26,7 @@ public class Mandelbrot {
 		return iteration;
 	}
 	
-	public static ComplexNumber cnFromPixel(int x, int y, int winWidth, int winHeight)
+	public static ComplexNumber cnFromPixel(final int x, final int y, final int winWidth, final int winHeight)
 	{
 		return new ComplexNumber((x * 3.0 / (double)winWidth) - 2, (y * 2.0 / (double)winHeight) - 1);
 	}

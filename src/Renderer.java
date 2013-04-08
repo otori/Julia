@@ -1,70 +1,67 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import de.misc.ColorFun;
 
-public class Renderer extends JPanel{
+public class Renderer extends JPanel implements ActionListener{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	BufferedImage mbImage;
+	private final BufferedImage mbImage;
+	private final int width, height, iThreads;
+	private final MBRenderThread[] renderer;
 	
-	
-	public Renderer()
+	public Renderer(final int winWidth, final int winHeight, final int iThreads)
 	{
-		mbImage = new BufferedImage(900, 600, BufferedImage.TYPE_3BYTE_BGR);
+		width = winWidth;
+		height = winHeight;
+		this.iThreads = iThreads;
+		mbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+		
+		renderer = new MBRenderThread[iThreads];
+				
+		Timer t = new Timer(100, this);
+		t.start();
+	}
+	
+	private void initThreads()
+	{
+		int renderHeight = height / iThreads;
+		for(int i = 0; i < iThreads; i++)
+		{
+			renderer[i] = new MBRenderThread(mbImage, 0, i * renderHeight, width, renderHeight);
+			System.out.println("" + 0 + "," + i * renderHeight + "," + width + "," + renderHeight);			
+		}
 	}
 	
 	private void renderImage()
-	{		
-		final byte[] pixelArray = ((DataBufferByte)(mbImage.getRaster().getDataBuffer())).getData();
+	{	
+		initThreads();
 		
-		int winWidth = mbImage.getWidth();
-		int winHeight = mbImage.getHeight();				
-		
-		for(int x = 0; x < winWidth; x++)
+		for(int i = 0; i < iThreads; i++)
 		{
-			for(int y = 0; y < winHeight; y++)
-			{
-				int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixel(x, y, winWidth, winHeight));
-								
-				if(iter == Mandelbrot.MAX_ITER)
-				{					
-					pixelArray[y * winWidth * 3 + x * 3] = 0;
-					pixelArray[y * winWidth * 3 + x * 3 + 1] = 0;
-					pixelArray[y * winWidth * 3 + x * 3 + 2] = 0;									
-				}
-				else
-				{					
-					Color pxCol = null;
-					
-					//Choose either the upper color selection for a psychedelic color experience,
-					//Or the lower one for a calm one
-										
-					double near = Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER);
-					pxCol = ColorFun.farbVerlauf(Color.getHSBColor(((x / (float)winWidth) + 0.5f) % 1.f, 1.f, 1.f), Color.getHSBColor(x / (float)winWidth, 1.f, 1.f), near);					
-					//int colVal = (int)((Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER)) * 255);
-					//int colVal = (int)((Math.pow(iter, .28) / Math.pow((double)Mandelbrot.MAX_ITER, .28)) * 255);
-					//pxCol = new Color(colVal, 255-colVal, 0);
-										
-															
-					pixelArray[y * winWidth * 3 + x * 3] = (byte)pxCol.getBlue();
-					pixelArray[y * winWidth * 3 + x * 3 + 1] = (byte)pxCol.getGreen();
-					pixelArray[y * winWidth * 3 + x * 3 + 2] = (byte)pxCol.getRed();
-					
-				}				
-			}
-		}		
-		
+			renderer[i].start();			
+		}
+		for(int i = 0; i < iThreads; i++)
+		{
+			try {
+				renderer[i].join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				System.out.println("Thread Exception: " + e.getMessage());
+			}			
+		}
 	}
 	
 	public void paint (Graphics g)
@@ -87,21 +84,29 @@ public class Renderer extends JPanel{
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Renderer mbProgram = new Renderer();
+		int imWidth = 1200, imHeight = 800;
+		
+		Renderer mbProgram = new Renderer(imWidth, imHeight, 4);
 		JFrame frame = new JFrame("Mandelbrot / Julia");		
         frame.add(mbProgram);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setSize(900, 600);
+        frame.setSize(imWidth, imHeight);
         
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
        
         Insets winInsets = frame.getInsets(); 
-        frame.setSize(900 + winInsets.left + winInsets.right, 600 + winInsets.top + winInsets.bottom);
+        frame.setSize(imWidth + winInsets.left + winInsets.right, imHeight + winInsets.top + winInsets.bottom);
 
         System.out.println(winInsets);
         
 		System.out.println("Fractal Time 1337");			
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		paint(getGraphics());
 	}
 }

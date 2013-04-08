@@ -45,7 +45,7 @@ public class ComplexNumber {
 	
 	public void quad()
 	{
-		double tmpReal = real * real - imag * imag;
+		final double tmpReal = real * real - imag * imag;
 		imag = 2 * real * imag;
 		real = tmpReal;
 	}
