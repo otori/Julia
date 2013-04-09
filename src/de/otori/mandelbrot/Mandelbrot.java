@@ -26,12 +26,18 @@ public class Mandelbrot {
 		return iteration;
 	}
 	
-	public static ComplexNumber cnFromPixel(final int x, final int y, final int winWidth, final int winHeight)//, double zoom, double xZoom, double yZoom)
+	public static ComplexNumber cnFromPixel(final int x, final int y, final int winWidth, final int winHeight)//, double zoom, double xCenter, double yCenter)
 	{		
 		return new ComplexNumber((x * 3.0 / (double)winWidth) - 2, (y * 2.0 / (double)winHeight) - 1);
 	}
 	
-	public static double sqrtFakeAprox(int iter) //THis is not really an aproximation of sqrt, it just grows faster at the beginning (and we didnt make a better name :D)
+	public static ComplexNumber cnFromPixelZoom(final int x, final int y, final int winWidth, final int winHeight, double zoom, double xCenter, double yCenter)
+	{
+		return new ComplexNumber(xCenter + (x / (double)winWidth - 0.5)*(3.0/zoom) , yCenter + (y / (double)winHeight - 0.5)*(2.0/zoom));
+	}
+	
+	//This is not really an aproximation of sqrt, it just grows faster at the beginning (and we didnt make a better name :D)
+	public static double sqrtFakeAprox(int iter) 
 	{
 		if(iter < (MAX_ITER / 2))
 			return (4./3.) * (iter/(double)MAX_ITER);

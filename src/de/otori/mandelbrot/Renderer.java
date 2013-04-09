@@ -18,7 +18,8 @@ public class Renderer extends JPanel implements ActionListener{
 	private final BufferedImage mbImage;
 	private final int width, height, iThreads;
 	private final MBRenderThread[] renderer;
-	
+	private long tStart;
+		
 	public Renderer(final int winWidth, final int winHeight, final int iThreads)
 	{
 		width = winWidth;
@@ -28,22 +29,29 @@ public class Renderer extends JPanel implements ActionListener{
 		
 		renderer = new MBRenderThread[iThreads];
 				
-		Timer t = new Timer(100, this);
+		tStart = System.currentTimeMillis();
+		
+		Timer t = new Timer(40, this);
 		t.start();
 	}
 	
-	private void initThreads()
+	private void initThreads(double zoom)
 	{
 		int renderHeight = height / iThreads;
 		for(int i = 0; i < iThreads; i++)
 		{
-			renderer[i] = new MBRenderThread(mbImage, 0, i * renderHeight, width, renderHeight);						
+			renderer[i] = new MBRenderThread(mbImage, 0, i * renderHeight, width, renderHeight, zoom);						
 		}
 	}
 	
 	private void renderImage()
 	{	
-		initThreads();
+		long deltaTime = System.currentTimeMillis() - tStart;
+		
+		double zoom = 1 + 0.3 * (deltaTime % 6000) / 1000;
+		zoom *= zoom;
+		
+		initThreads(zoom);
 		
 		for(int i = 0; i < iThreads; i++)
 		{
