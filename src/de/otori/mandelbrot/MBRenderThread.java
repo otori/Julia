@@ -53,11 +53,12 @@ public class MBRenderThread extends Thread {
 					//Choose either the upper color selection for a psychedelic color experience,
 					//Or the lower one for a calm one
 										
-					double near = Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER);
-					pxCol = ColorFun.farbVerlauf(Color.getHSBColor(((iX / (float)winWidth) + 0.5f) % 1.f, 1.f, 1.f), Color.getHSBColor(iX / (float)winWidth, 1.f, 1.f), near);					
-					//int colVal = (int)((Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER)) * 255);
+					//double near = Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER);
+					//pxCol = ColorFun.farbVerlauf(Color.getHSBColor(((iX / (float)winWidth) + 0.5f) % 1.f, 1.f, 1.f), Color.getHSBColor(iX / (float)winWidth, 1.f, 1.f), near);					
+					int colVal = (int)((Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER)) * 255);
+					//int colVal = (int)( Mandelbrot.sqrtFakeAprox(iter) * 255);
 					//int colVal = (int)((Math.pow(iter, .28) / Math.pow((double)Mandelbrot.MAX_ITER, .28)) * 255);
-					//pxCol = new Color(colVal, 255-colVal, 0);
+					pxCol = new Color(colVal, 255-colVal, 0);
 					
 					pixelArray[iY * winWidth * 3 + iX * 3] = (byte)pxCol.getBlue();
 					pixelArray[iY * winWidth * 3 + iX * 3 + 1] = (byte)pxCol.getGreen();

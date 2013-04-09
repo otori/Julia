@@ -60,6 +60,7 @@ public class Renderer extends JPanel implements ActionListener{
 		}
 	}
 	
+	@Override
 	public void paint (Graphics g)
 	{		
 		long ltStart = System.currentTimeMillis(); 
@@ -80,7 +81,7 @@ public class Renderer extends JPanel implements ActionListener{
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		int imWidth = 1200, imHeight = 800;
+		int imWidth = 600, imHeight = 400;
 		
 		Renderer mbProgram = new Renderer(imWidth, imHeight, 4);
 		JFrame frame = new JFrame("Mandelbrot / Julia");		
@@ -94,8 +95,6 @@ public class Renderer extends JPanel implements ActionListener{
        
         Insets winInsets = frame.getInsets(); 
         frame.setSize(imWidth + winInsets.left + winInsets.right, imHeight + winInsets.top + winInsets.bottom);
-
-        System.out.println(winInsets);
         
 		System.out.println("Fractal Time 1337");			
 	}

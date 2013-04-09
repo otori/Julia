@@ -53,6 +53,11 @@ public class ComplexNumber {
 	
 	public double abs()
 	{
+		return Math.sqrt( real*real + imag*imag);
+	}
+	
+	public double absSqr()
+	{
 		return real*real + imag*imag;
 	}
 	
