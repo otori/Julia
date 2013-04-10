@@ -36,9 +36,12 @@ public class MBRenderThread extends Thread {
 	
 	private void renderImage()
 	{		
-		for(int iX = x; iX < x + renderWidth; iX++)
+		int xMax = Math.min(x + renderWidth, winWidth);
+		int yMax = Math.min(y + renderHeight, winHeight);
+		
+		for(int iX = x; iX < xMax; iX++)
 		{
-			for(int iY = y; iY < y + renderHeight; iY++)
+			for(int iY = y; iY < yMax; iY++)
 			{
 				//int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixel(iX, iY, winWidth, winHeight));//, 2.0 ,-0.5, 0));
 				int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0));				

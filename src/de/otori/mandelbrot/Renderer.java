@@ -1,115 +1,78 @@
 package de.otori.mandelbrot;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+public class Renderer {
 
-public class Renderer extends JPanel implements ActionListener{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final BufferedImage mbImage;
-	private final int width, height, iThreads;
-	private final MBRenderThread[] renderer;
-	private long tStart;
-		
-	public Renderer(final int winWidth, final int winHeight, final int iThreads)
+	// Thread Manager
+	
+	final int width, height; 
+	final int iThreads;
+	final MBRenderThread[] rThreads, activeThreads;
+	final BufferedImage biImage;		
+	final Dimension threadRenderArea;
+	
+	final int xThreads, yThreads;
+	
+	public Renderer(BufferedImage biImage, int iThreads, Dimension renderArea)
 	{
-		width = winWidth;
-		height = winHeight;
-		this.iThreads = iThreads;
-		mbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+		width = biImage.getWidth();
+		height = biImage.getHeight();
 		
-		renderer = new MBRenderThread[iThreads];
-				
-		tStart = System.currentTimeMillis();
+		this.biImage = biImage;		
+		this.iThreads = iThreads;		
 		
-		Timer t = new Timer(40, this);
-		t.start();
+		threadRenderArea = renderArea;
+		
+		xThreads = (int)Math.ceil(width / (double)threadRenderArea.width);
+		yThreads = (int)Math.ceil(height / (double)threadRenderArea.height);
+		
+		rThreads = new MBRenderThread[xThreads * yThreads];
+		activeThreads = new MBRenderThread[iThreads];
 	}
-	
-	private void initThreads(double zoom)
+		
+	public void renderImage(double zoom)
 	{
-		int renderHeight = height / iThreads;
-		for(int i = 0; i < iThreads; i++)
+		for(int y = 0; y < yThreads; y++)
 		{
-			renderer[i] = new MBRenderThread(mbImage, 0, i * renderHeight, width, renderHeight, zoom);						
-		}
-	}
-	
-	private void renderImage()
-	{	
-		long deltaTime = System.currentTimeMillis() - tStart;
-		
-		double zoom = 1 + 0.3 * (deltaTime % 6000) / 1000;
-		zoom *= zoom;
-		
-		initThreads(zoom);
-		
-		for(int i = 0; i < iThreads; i++)
-		{
-			renderer[i].start();			
+			for(int x = 0; x < xThreads; x++)
+			{								
+				rThreads[y*xThreads + x] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom);				
+			}
 		}
 		for(int i = 0; i < iThreads; i++)
 		{
-			try {
-				renderer[i].join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Thread Exception: " + e.getMessage());
-			}			
+			activeThreads[i] = rThreads[i];
+			activeThreads[i].start();
+		}
+		
+		int thrCount = iThreads;
+		int anzThreads = xThreads * yThreads;
+		while(thrCount < anzThreads)
+		{
+			for(int i = 0; i < iThreads; i++)
+			{
+				if (activeThreads[i].isAlive())
+				{					
+					try {
+						Thread.sleep(0, 500000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						System.out.println("Thread Exception :(");
+						e.printStackTrace();
+					}
+				}
+				else
+				{
+					activeThreads[i] = rThreads[thrCount];
+					activeThreads[i].start();
+					thrCount++;
+					if(!(thrCount < anzThreads))
+						break;
+				}
+			}
 		}
 	}
 	
-	@Override
-	public void paint (Graphics g)
-	{		
-		long ltStart = System.currentTimeMillis(); 
-				
-		renderImage();
-		g.drawImage(mbImage, 0, 0, null);
-		
-		long ltDur = System.currentTimeMillis() - ltStart;
-		
-		System.out.println("Rendering took " + ltDur + "ms");
-		System.out.println("Estimated FPS: " + 1000.0 / ltDur + "");
-	}
-	
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-		int imWidth = 600, imHeight = 400;
-		
-		Renderer mbProgram = new Renderer(imWidth, imHeight, 4);
-		JFrame frame = new JFrame("Mandelbrot / Julia");		
-        frame.add(mbProgram);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setSize(imWidth, imHeight);
-        
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-       
-        Insets winInsets = frame.getInsets(); 
-        frame.setSize(imWidth + winInsets.left + winInsets.right, imHeight + winInsets.top + winInsets.bottom);
-        
-		System.out.println("Fractal Time 1337");			
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		paint(getGraphics());
-	}
 }

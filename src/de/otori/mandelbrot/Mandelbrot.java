@@ -31,9 +31,9 @@ public class Mandelbrot {
 		return new ComplexNumber((x * 3.0 / (double)winWidth) - 2, (y * 2.0 / (double)winHeight) - 1);
 	}
 	
-	public static ComplexNumber cnFromPixelZoom(final int x, final int y, final int winWidth, final int winHeight, double zoom, double xCenter, double yCenter)
-	{
-		return new ComplexNumber(xCenter + (x / (double)winWidth - 0.5)*(3.0/zoom) , yCenter + (y / (double)winHeight - 0.5)*(2.0/zoom));
+	public static ComplexNumber cnFromPixelZoom(final int x, final int y, final int winWidth, final int winHeight, final double zoom, final double xCenter, final double yCenter)
+	{		
+		return new ComplexNumber(xCenter + (x / (double)winWidth - 0.5)*(3/zoom) , yCenter + (y / (double)winHeight - 0.5)*(2/zoom));
 	}
 	
 	//This is not really an aproximation of sqrt, it just grows faster at the beginning (and we didnt make a better name :D)
