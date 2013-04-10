@@ -111,7 +111,7 @@ public class Program extends JPanel implements ActionListener{
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		int imWidth = 300, imHeight = 200;
+		int imWidth = 600, imHeight = 400;
 		
 		Program mbProgram = new Program(imWidth, imHeight, 4);
 		JFrame frame = new JFrame("Mandelbrot / Julia");		

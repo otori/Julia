@@ -21,15 +21,16 @@ public class Renderer {
 		height = biImage.getHeight();
 		
 		this.biImage = biImage;		
-		this.iThreads = iThreads;		
 		
 		threadRenderArea = renderArea;
 		
 		xThreads = (int)Math.ceil(width / (double)threadRenderArea.width);
 		yThreads = (int)Math.ceil(height / (double)threadRenderArea.height);
+
+		this.iThreads = Math.min(iThreads, xThreads * yThreads);
 		
 		rThreads = new MBRenderThread[xThreads * yThreads];
-		activeThreads = new MBRenderThread[iThreads];
+		activeThreads = new MBRenderThread[this.iThreads];
 	}
 		
 	public void renderImage(double zoom)
