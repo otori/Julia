@@ -8,13 +8,16 @@ import de.otori.misc.ColorFun;
 
 public class MBRenderThread extends Thread {
 	
+	//private  ComplexNumber RekursionsAnker = new ComplexNumber(0.34,0);
 	private final int x, y, renderWidth, renderHeight;
 	final byte[] pixelArray;
 	final int winWidth, winHeight;
 	double zoom;
+	ComplexNumber RekursionsAnker;
+	
 	//Be careful, to not write in the same Image Segments :D
 	
-	public MBRenderThread(BufferedImage biImage, int x, int y, int renderWidth, int renderHeight, double dZoom)
+	public MBRenderThread(BufferedImage biImage, int x, int y, int renderWidth, int renderHeight, double dZoom, ComplexNumber RekuAnker)
 	{
 		this.x = x;
 		this.y = y;
@@ -26,6 +29,7 @@ public class MBRenderThread extends Thread {
 		winWidth = biImage.getWidth();
 		winHeight = biImage.getHeight();
 		zoom = dZoom;
+		RekursionsAnker = RekuAnker;
 	}
 	
 	@Override
@@ -44,7 +48,7 @@ public class MBRenderThread extends Thread {
 			for(int iY = y; iY < yMax; iY++)
 			{
 				//int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixel(iX, iY, winWidth, winHeight));//, 2.0 ,-0.5, 0));
-				int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0));				
+				int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),RekursionsAnker);				
 				
 				if(iter == Mandelbrot.MAX_ITER)
 				{					

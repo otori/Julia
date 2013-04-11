@@ -7,11 +7,11 @@ public class Mandelbrot {
 	
 	public static final int MAX_ITER = 40;
 	
-	public static int isInMandel(final ComplexNumber cn)
+	public static int isInMandel(final ComplexNumber cn, ComplexNumber AnkerNummer)
 	{
 		int iteration = 1;
 		
-		ComplexNumber mandelFolge = new ComplexNumber(cn);
+		ComplexNumber mandelFolge = new ComplexNumber(AnkerNummer);
 		
 		while(iteration < MAX_ITER)
 		{

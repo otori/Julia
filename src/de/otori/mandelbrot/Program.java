@@ -18,7 +18,7 @@ public class Program extends JPanel implements ActionListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	private final BufferedImage mbImage;
-	private final int width, height, iThreads;
+	private  int width, height, iThreads;
 	//private final MBRenderThread[] renderer;
 	private long tStart;
 	private final Renderer renderer;
@@ -85,10 +85,13 @@ public class Program extends JPanel implements ActionListener{
 		
 		long deltaTime = System.currentTimeMillis() - tStart;
 		
-		double zoom = 1 + 0.3 * (deltaTime % 6000) / 1000;
+		double zoom = 1 ;//+ 0.3 * (deltaTime % 6000) / 1000;
 		zoom *= zoom;
 		
-		renderer.renderImage(zoom);
+		ComplexNumber RekuAnker = new ComplexNumber(0//((Math.cos((0.3*deltaTime)/2000)*(Math.sin(0.3 * (deltaTime ) / 1000))))
+													, ((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))); 
+		
+		renderer.renderImage(zoom,RekuAnker);
 		g.drawImage(mbImage, 0, 0, null);
 		
 		long ltDur = System.currentTimeMillis() - ltStart;
@@ -117,7 +120,7 @@ public class Program extends JPanel implements ActionListener{
 		JFrame frame = new JFrame("Mandelbrot / Julia");		
         frame.add(mbProgram);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setSize(imWidth, imHeight);
         
         frame.setLocationRelativeTo(null);

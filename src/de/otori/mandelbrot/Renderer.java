@@ -33,13 +33,13 @@ public class Renderer {
 		activeThreads = new MBRenderThread[this.iThreads];
 	}
 		
-	public void renderImage(double zoom)
+	public void renderImage(double zoom, ComplexNumber RekuAnker)
 	{
 		for(int y = 0; y < yThreads; y++)
 		{
 			for(int x = 0; x < xThreads; x++)
 			{								
-				rThreads[y*xThreads + x] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom);				
+				rThreads[y*xThreads + x] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom,RekuAnker);				
 			}
 		}
 		for(int i = 0; i < iThreads; i++)
