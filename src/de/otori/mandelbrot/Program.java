@@ -101,9 +101,8 @@ public class Program extends JPanel implements ActionListener{
 		long ltDur = System.currentTimeMillis() - ltStart;
 		
 		g.setColor(Color.white);		
-		String frameRate = Double.toString(1000.0 / ltDur);
-		frameRate = frameRate.substring(0, Math.min(5, frameRate.length() - 1));
-		g.drawString(frameRate + " fp/s", 5, 15);
+				
+		g.drawString(String.format("%.2f fp/s", 1000.0 / ltDur), 2, 12);
 		
 		System.out.println("Rendering took " + ltDur + "ms");
 		System.out.println("Estimated FPS: " + 1000.0 / ltDur + "");
