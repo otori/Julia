@@ -16,11 +16,11 @@ public class MBRenderThread extends Thread {
 	final byte[] pixelArray;
 	final int winWidth, winHeight;
 	double zoom;
-	ComplexNumber RekursionsAnker;
+	ComplexNumber startValue;
 	
 	//Be careful, to not write in the same Image Segments :D
 	
-	public MBRenderThread(BufferedImage biImage, int x, int y, int renderWidth, int renderHeight, double dZoom, ComplexNumber RekuAnker)
+	public MBRenderThread(BufferedImage biImage, int x, int y, int renderWidth, int renderHeight, double dZoom, ComplexNumber stValue)
 	{
 		this.x = x;
 		this.y = y;
@@ -32,7 +32,7 @@ public class MBRenderThread extends Thread {
 		winWidth = biImage.getWidth();
 		winHeight = biImage.getHeight();
 		zoom = dZoom;
-		RekursionsAnker = RekuAnker;
+		startValue = stValue;
 	}
 	
 	@Override
@@ -53,9 +53,11 @@ public class MBRenderThread extends Thread {
 				//int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixel(iX, iY, winWidth, winHeight));//, 2.0 ,-0.5, 0));
 				
 				int iter = Mandelbrot.MAX_ITER;
-				if(STANDARDMODE){
-				 iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),RekursionsAnker);}			
-				if (!STANDARDMODE){ iter = Sinustest.sinustest(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0), RekursionsAnker);}
+				if(STANDARDMODE)
+					iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),startValue);			
+				else				
+					iter = Sinustest.sinustest(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0), startValue);
+				
 				
 				if(iter == Mandelbrot.MAX_ITER)
 				{					

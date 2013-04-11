@@ -20,7 +20,7 @@ public class Program extends JPanel implements ActionListener{
 	//use Zoom (true) or don't use (false)
 	public static final boolean useZoom = true ;
 	private final BufferedImage mbImage;
-	private  int width, height, iThreads;
+	private  int width, height;
 	//private final MBRenderThread[] renderer;
 	private long tStart;
 	private final Renderer renderer;
@@ -29,54 +29,15 @@ public class Program extends JPanel implements ActionListener{
 	{
 		width = winWidth;
 		height = winHeight;
-		this.iThreads = iThreads;
-		mbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 		
-		//renderer = new MBRenderThread[iThreads];
+		mbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 				
 		tStart = System.currentTimeMillis();
 		
 		renderer = new Renderer(mbImage, iThreads, new Dimension(80,80));
-		//Timer t = new Timer(40, this);
-		//t.start();
-	}
-	
-	/*
-	private void initThreads(double zoom)
-	{
-		int renderHeight = height / iThreads;
-		for(int i = 0; i < iThreads; i++)
-		{
-			renderer[i] = new MBRenderThread(mbImage, 0, i * renderHeight, width, renderHeight, zoom);						
-		}
-	}
-	*/
-	
-	/*
-	private void renderImage()
-	{	
-		long deltaTime = System.currentTimeMillis() - tStart;
 		
-		double zoom = 1 + 0.3 * (deltaTime % 6000) / 1000;
-		zoom *= zoom;		
-		
-		initThreads(zoom);
-		
-		for(int i = 0; i < iThreads; i++)
-		{
-			renderer[i].start();			
-		}
-		for(int i = 0; i < iThreads; i++)
-		{
-			try {
-				renderer[i].join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Thread Exception: " + e.getMessage());
-			}			
-		}
 	}
-	*/
+
 	
 	@Override
 	public void paint (Graphics g)
@@ -88,14 +49,17 @@ public class Program extends JPanel implements ActionListener{
 		long deltaTime = System.currentTimeMillis() - tStart;
 		
 		double zoom;
-		if (useZoom) { zoom = 1 + (Math.sin( 0.3 * (deltaTime ) / 1000)/10)*2;}
-		if(!useZoom){ zoom = 1;}
+		if (useZoom) 
+			zoom = 1 + (Math.sin( 0.3 * (deltaTime ) / 1000)/10)*2;
+		else 
+			zoom = 1;
+		
 		zoom *= zoom;
 		
-		ComplexNumber RekuAnker = new ComplexNumber(0//((Math.cos((0.3*deltaTime)/2000)*(Math.sin(0.3 * (deltaTime ) / 1000))))
+		ComplexNumber startValue = new ComplexNumber(0//((Math.cos((0.3*deltaTime)/2000)*(Math.sin(0.3 * (deltaTime ) / 1000))))
 													, ((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))*1.5); 
 		
-		renderer.renderImage(zoom,RekuAnker);
+		renderer.renderImage(zoom, startValue);
 		g.drawImage(mbImage, 0, 0, null);
 		
 		long ltDur = System.currentTimeMillis() - ltStart;
@@ -117,7 +81,7 @@ public class Program extends JPanel implements ActionListener{
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		int imWidth = 600, imHeight = 400;
+		int imWidth = 800, imHeight = 600;
 		
 		Program mbProgram = new Program(imWidth, imHeight, 4);
 		JFrame frame = new JFrame("Mandelbrot / Julia");		
