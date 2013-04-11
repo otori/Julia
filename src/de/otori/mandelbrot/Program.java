@@ -17,6 +17,8 @@ public class Program extends JPanel implements ActionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	//use Zoom (true) or don't use (false)
+	public static final boolean useZoom = true ;
 	private final BufferedImage mbImage;
 	private  int width, height, iThreads;
 	//private final MBRenderThread[] renderer;
@@ -85,11 +87,13 @@ public class Program extends JPanel implements ActionListener{
 		
 		long deltaTime = System.currentTimeMillis() - tStart;
 		
-		double zoom = 1 ;//+ 0.3 * (deltaTime % 6000) / 1000;
+		double zoom;
+		if (useZoom) { zoom = 1 + (Math.sin( 0.3 * (deltaTime ) / 1000)/10)*2;}
+		if(!useZoom){ zoom = 1;}
 		zoom *= zoom;
 		
 		ComplexNumber RekuAnker = new ComplexNumber(0//((Math.cos((0.3*deltaTime)/2000)*(Math.sin(0.3 * (deltaTime ) / 1000))))
-													, ((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))); 
+													, ((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))*1.5); 
 		
 		renderer.renderImage(zoom,RekuAnker);
 		g.drawImage(mbImage, 0, 0, null);

@@ -3,10 +3,13 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
+import Sinus.Sinustest;
+
 import de.otori.misc.ColorFun;
 
-
 public class MBRenderThread extends Thread {
+	
+	public static final boolean STANDARDMODE = true;
 	
 	//private  ComplexNumber RekursionsAnker = new ComplexNumber(0.34,0);
 	private final int x, y, renderWidth, renderHeight;
@@ -48,7 +51,11 @@ public class MBRenderThread extends Thread {
 			for(int iY = y; iY < yMax; iY++)
 			{
 				//int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixel(iX, iY, winWidth, winHeight));//, 2.0 ,-0.5, 0));
-				int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),RekursionsAnker);				
+				
+				int iter = Mandelbrot.MAX_ITER;
+				if(STANDARDMODE){
+				 iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),RekursionsAnker);}			
+				if (!STANDARDMODE){ iter = Sinustest.sinustest(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0), RekursionsAnker);}
 				
 				if(iter == Mandelbrot.MAX_ITER)
 				{					
@@ -65,8 +72,8 @@ public class MBRenderThread extends Thread {
 										
 					//double near = Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER);
 					//pxCol = ColorFun.farbVerlauf(Color.getHSBColor(((iX / (float)winWidth) + 0.5f) % 1.f, 1.f, 1.f), Color.getHSBColor(iX / (float)winWidth, 1.f, 1.f), near);					
-					int colVal = (int)((Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER)) * 255);
-					//int colVal = (int)( Mandelbrot.sqrtFakeAprox(iter) * 255);
+					//int colVal = (int)((Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER)) * 255);
+					int colVal = (int)( Mandelbrot.sqrtFakeAprox(iter) * 255);
 					//int colVal = (int)((Math.pow(iter, .28) / Math.pow((double)Mandelbrot.MAX_ITER, .28)) * 255);
 					pxCol = new Color(colVal, 255-colVal, 0);
 					
