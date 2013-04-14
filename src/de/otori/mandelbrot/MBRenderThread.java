@@ -56,11 +56,10 @@ public class MBRenderThread extends Thread {
 				if(STANDARDMODE)
 					iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),startValue);			
 				else				
-					iter = Sinustest.sinustest(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0), startValue);
-				
-				
+					iter = Math.abs(Sinustest.sinustest(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0), startValue));
+								
 				if(iter == Mandelbrot.MAX_ITER)
-				{					
+				{						
 					pixelArray[iY * winWidth * 3 + iX * 3] = 0;
 					pixelArray[iY * winWidth * 3 + iX * 3 + 1] = 0;
 					pixelArray[iY * winWidth * 3 + iX * 3 + 2] = 0;									
@@ -75,7 +74,7 @@ public class MBRenderThread extends Thread {
 					//double near = Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER);
 					//pxCol = ColorFun.farbVerlauf(Color.getHSBColor(((iX / (float)winWidth) + 0.5f) % 1.f, 1.f, 1.f), Color.getHSBColor(iX / (float)winWidth, 1.f, 1.f), near);					
 					//int colVal = (int)((Math.sqrt(iter) / Math.sqrt((double)Mandelbrot.MAX_ITER)) * 255);
-					int colVal = (int)( Mandelbrot.sqrtFakeAprox(iter) * 255);
+					int colVal = (int)( Mandelbrot.sqrtFakeAprox(iter) * 255);					
 					//int colVal = (int)((Math.pow(iter, .28) / Math.pow((double)Mandelbrot.MAX_ITER, .28)) * 255);
 					pxCol = new Color(colVal, 255-colVal, 0);
 					

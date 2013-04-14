@@ -9,7 +9,7 @@ public class Renderer {
 	
 	final int width, height; 
 	final int iThreads;
-	final MBRenderThread[] rThreads, activeThreads;
+	final MBRenderThread[] activeThreads;
 	final BufferedImage biImage;		
 	final Dimension threadRenderArea;
 	
@@ -28,23 +28,18 @@ public class Renderer {
 		yThreads = (int)Math.ceil(height / (double)threadRenderArea.height);
 
 		this.iThreads = Math.min(iThreads, xThreads * yThreads);
-		
-		rThreads = new MBRenderThread[xThreads * yThreads];
+				
 		activeThreads = new MBRenderThread[this.iThreads];
 	}
 		
-	public void renderImage(double zoom, ComplexNumber RekuAnker)
+	public void renderImage(double zoom, ComplexNumber startValue)
 	{
-		for(int y = 0; y < yThreads; y++)
-		{
-			for(int x = 0; x < xThreads; x++)
-			{								
-				rThreads[y*xThreads + x] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom,RekuAnker);				
-			}
-		}
+		int x, y;
 		for(int i = 0; i < iThreads; i++)
-		{
-			activeThreads[i] = rThreads[i];
+		{			
+			x = i % xThreads;
+			y = i / xThreads;
+			activeThreads[i] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, startValue);
 			activeThreads[i].start();
 		}
 		
@@ -57,7 +52,7 @@ public class Renderer {
 				if (activeThreads[i].isAlive())
 				{					
 					try {
-						Thread.sleep(0, 500000);
+						Thread.sleep(0, 100000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						System.out.println("Thread Exception :(");
@@ -66,7 +61,9 @@ public class Renderer {
 				}
 				else
 				{
-					activeThreads[i] = rThreads[thrCount];
+					x = thrCount % xThreads;
+					y = thrCount / xThreads;
+					activeThreads[i] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, startValue);
 					activeThreads[i].start();
 					thrCount++;
 					if(!(thrCount < anzThreads))
@@ -74,6 +71,21 @@ public class Renderer {
 				}
 			}
 		}
+		
+		for(MBRenderThread thread : activeThreads)
+		{			
+			while(thread.isAlive())
+			{
+				try{
+					Thread.sleep(0, 100000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Thread Exception :(");
+					e.printStackTrace();
+				}
+			}
+		}		
+		
 	}
 	
 }

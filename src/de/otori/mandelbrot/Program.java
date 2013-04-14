@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.Timer;
+
 
 public class Program extends JPanel implements ActionListener{
 
@@ -18,7 +18,7 @@ public class Program extends JPanel implements ActionListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	//use Zoom (true) or don't use (false)
-	public static final boolean useZoom = true ;
+	public static final boolean useZoom = false ;
 	private final BufferedImage mbImage;
 	private  int width, height;
 	//private final MBRenderThread[] renderer;
@@ -34,7 +34,7 @@ public class Program extends JPanel implements ActionListener{
 				
 		tStart = System.currentTimeMillis();
 		
-		renderer = new Renderer(mbImage, iThreads, new Dimension(80,80));
+		renderer = new Renderer(mbImage, iThreads, new Dimension(160,160));
 		
 	}
 
@@ -57,7 +57,7 @@ public class Program extends JPanel implements ActionListener{
 		zoom *= zoom;
 		
 		ComplexNumber startValue = new ComplexNumber(0//((Math.cos((0.3*deltaTime)/2000)*(Math.sin(0.3 * (deltaTime ) / 1000))))
-													, ((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))*1.5); 
+													, 0);//((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))*1.5); 
 		
 		renderer.renderImage(zoom, startValue);
 		g.drawImage(mbImage, 0, 0, null);
@@ -83,7 +83,7 @@ public class Program extends JPanel implements ActionListener{
 
 		int imWidth = 800, imHeight = 600;
 		
-		Program mbProgram = new Program(imWidth, imHeight, 4);
+		Program mbProgram = new Program(imWidth, imHeight, 8);
 		JFrame frame = new JFrame("Mandelbrot / Julia");		
         frame.add(mbProgram);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
