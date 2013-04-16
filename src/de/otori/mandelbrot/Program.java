@@ -7,13 +7,19 @@ import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
-public class Program extends JPanel{
+
+
+public class Program extends JPanel implements KeyListener, MouseListener{
 
 	/**
 	 * 
@@ -26,9 +32,13 @@ public class Program extends JPanel{
 	//private final MBRenderThread[] renderer;
 	private long tStart;
 	private final Renderer renderer;
-		
+	double startvalueReal = 0;	
+	double startvalueImag = 0;
 	public Program(final int winWidth, final int winHeight, final int iThreads)
 	{
+		setFocusable(true);
+		addKeyListener(this);		
+		addMouseListener(this);	
 		width = winWidth;
 		height = winHeight;
 		
@@ -58,8 +68,8 @@ public class Program extends JPanel{
 		
 		zoom *= zoom;
 		
-		ComplexNumber startValue = new ComplexNumber(0//((Math.cos((0.3*deltaTime)/2000)*(Math.sin(0.3 * (deltaTime ) / 1000))))
-													, 0);//((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))*1.5); 
+		ComplexNumber startValue = new ComplexNumber(startvalueReal//((Math.cos((0.3*deltaTime)/2000)*(Math.sin(0.3 * (deltaTime ) / 1000))))
+													, startvalueImag);//((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))*1.5); 
 		
 		renderer.renderImage(zoom, startValue);
 		g.drawImage(mbImage, 0, 0, null);
@@ -70,8 +80,8 @@ public class Program extends JPanel{
 				
 		g.drawString(String.format("%.2f fp/s", 1000.0 / ltDur), 2, 12);
 		
-		System.out.println("Rendering took " + ltDur + "ms");
-		System.out.println("Estimated FPS: " + 1000.0 / ltDur + "");
+		//System.out.println("Rendering took " + ltDur + "ms");
+		//System.out.println("Estimated FPS: " + 1000.0 / ltDur + "");
 			
 		repaint();		
 	}
@@ -102,6 +112,72 @@ public class Program extends JPanel{
         frame.setSize(imWidth + winInsets.left + winInsets.right, imHeight + winInsets.top + winInsets.bottom);
         
 		System.out.println("Fractal Time 1337");			
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		//System.out.println("keytyped");
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub		
+		char key = e.getKeyChar();
+		int keycode = e.getKeyCode();
+		
+		System.out.println("pressed : "+key + "mit dem code : " + String.valueOf(keycode));
+		if(keycode == 38){startvalueReal = startvalueReal + 0.01;}
+		if(keycode == 40){startvalueReal=startvalueReal-0.01;}
+		if(keycode == 37){startvalueImag=startvalueImag+0.01;}
+		if(keycode == 39){startvalueImag=startvalueImag-0.01;}
+		
+		
+	}
+
+
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
