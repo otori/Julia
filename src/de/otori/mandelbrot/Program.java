@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.Menu;
+import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -11,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
-public class Program extends JPanel implements ActionListener{
+public class Program extends JPanel{
 
 	/**
 	 * 
@@ -84,14 +86,17 @@ public class Program extends JPanel implements ActionListener{
 		int imWidth = 800, imHeight = 600;
 		
 		Program mbProgram = new Program(imWidth, imHeight, 8);
-		JFrame frame = new JFrame("Mandelbrot / Julia");		
+		final JFrame frame = new JFrame("Mandelbrot / Julia");		
         frame.add(mbProgram);
+               
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setSize(imWidth, imHeight);
         
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+               
+        
        
         Insets winInsets = frame.getInsets(); 
         frame.setSize(imWidth + winInsets.left + winInsets.right, imHeight + winInsets.top + winInsets.bottom);
@@ -99,9 +104,4 @@ public class Program extends JPanel implements ActionListener{
 		System.out.println("Fractal Time 1337");			
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		repaint();
-	}
 }

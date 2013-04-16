@@ -3,8 +3,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
-import Sinus.Sinustest;
-
 import de.otori.misc.ColorFun;
 
 public class MBRenderThread extends Thread {
@@ -53,11 +51,9 @@ public class MBRenderThread extends Thread {
 				//int iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixel(iX, iY, winWidth, winHeight));//, 2.0 ,-0.5, 0));
 				
 				int iter = Mandelbrot.MAX_ITER;
-				if(STANDARDMODE)
-					iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),startValue);			
-				else				
-					iter = Math.abs(Sinustest.sinustest(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0), startValue));
-								
+				
+				iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),startValue);			
+											
 				if(iter == Mandelbrot.MAX_ITER)
 				{						
 					pixelArray[iY * winWidth * 3 + iX * 3] = 0;
