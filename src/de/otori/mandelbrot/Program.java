@@ -3,18 +3,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Point2D;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import com.sun.org.apache.xml.internal.resolver.readers.XCatalogReader;
 
 import de.otori.mandelbrot.ComplexNumber;
 import de.otori.mandelbrot.Mandelbrot;
@@ -22,9 +19,9 @@ import de.otori.mandelbrot.Mandelbrot;
 
 
 
-public class Program extends JPanel implements KeyListener, MouseListener{
+public class Program extends JPanel implements KeyListener, MouseListener, MouseMotionListener{
 
-	private enum ProgramState {IDLE, ZOOMING};
+	private enum ProgramState {IDLE, ZOOMING, SHIFTING};
 	
 	/**
 	 * 
@@ -49,6 +46,7 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 		setFocusable(true);
 		addKeyListener(this);		
 		addMouseListener(this);	
+		addMouseMotionListener(this);
 		width = winWidth;
 		height = winHeight;
 		
@@ -152,15 +150,13 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 			if(ticksNow >= ZOOM_DURATION)
 			{
 				ticksNow = ZOOM_DURATION;
-				state = ProgramState.IDLE;
-				
-				System.out.println("Zoom finished..");
+				state = ProgramState.IDLE;				
 			}
 			
 			double zProgres = ticksNow / (double)ZOOM_DURATION;						
 			zoom = zoomStart + (zoomDest - zoomStart) * zProgres;			
-			pCenter.setImag(centerSrc.getImag() + (centerDest.getImag() - centerSrc.getImag()) * zProgres );
-			pCenter.setReal(centerSrc.getReal() + (centerDest.getReal() - centerSrc.getReal()) * zProgres );
+			pCenter.setImag(centerSrc.getImag() + (centerDest.getImag() - centerSrc.getImag()) * zProgres);
+			pCenter.setReal(centerSrc.getReal() + (centerDest.getReal() - centerSrc.getReal()) * zProgres);
 			
 			break;
 
@@ -176,8 +172,7 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		if(System.currentTimeMillis() - lastClick < DOUBLECLICKMAXDIFF)
-		{
-			System.out.println("Zoom initiated...");
+		{			
 			initZoom(e.getPoint().x, e.getPoint().y);
 		}
 		else
@@ -187,23 +182,27 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 	}
 
 
+	private ComplexNumber centerPressed;
+	private ComplexNumber centerStart;
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		centerPressed = Mandelbrot.cnFromPixelZoom(e.getPoint().x, e.getPoint().y, width, height, zoom, pCenter.getReal(), pCenter.getImag());
+		centerStart = new ComplexNumber(pCenter);				
 	}
 
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
+		centerPressed = null;	
 	}
 
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		
 	}
 
@@ -253,6 +252,29 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		if(centerPressed != null && state == ProgramState.IDLE)
+		{			
+			ComplexNumber curPos = Mandelbrot.cnFromPixelZoom(e.getPoint().x, e.getPoint().y, width, height, zoom, pCenter.getReal(), pCenter.getImag());
+			
+			double deltaReal = (curPos.getReal() - centerPressed.getReal()) / 1.25;
+			double deltaImag = (curPos.getImag() - centerPressed.getImag()) / 1.25;
+			
+			pCenter.setReal(centerStart.getReal() - deltaReal);
+			pCenter.setImag(centerStart.getImag() - deltaImag);
+		}
+	}
+
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
