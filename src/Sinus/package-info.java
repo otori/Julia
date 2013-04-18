@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author arndt
- *
- */
-package Sinus;

@@ -3,37 +3,47 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.awt.Menu;
-import java.awt.MenuBar;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import com.sun.org.apache.xml.internal.resolver.readers.XCatalogReader;
+
+import de.otori.mandelbrot.ComplexNumber;
+import de.otori.mandelbrot.Mandelbrot;
 
 
 
 
 public class Program extends JPanel implements KeyListener, MouseListener{
 
+	private enum ProgramState {IDLE, ZOOMING};
+	
 	/**
 	 * 
 	 */
+	
+	private ProgramState state;
+	
 	private static final long serialVersionUID = 1L;
 	//use Zoom (true) or don't use (false)
-	public static final boolean useZoom = false ;
 	private final BufferedImage mbImage;
 	private  int width, height;
 	//private final MBRenderThread[] renderer;
 	private long tStart;
 	private final Renderer renderer;
-	double startvalueReal = 0;	
-	double startvalueImag = 0;
+	
+	private ComplexNumber startValue;
+	private ComplexNumber pCenter;
+	private double zoom;
+	
 	public Program(final int winWidth, final int winHeight, final int iThreads)
 	{
 		setFocusable(true);
@@ -48,6 +58,12 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 		
 		renderer = new Renderer(mbImage, iThreads, new Dimension(160,160));
 		
+		state = ProgramState.IDLE;
+		
+		startValue = new ComplexNumber(0, 0);
+		pCenter = new ComplexNumber(-0.5,0);
+		zoom = 1;
+		
 	}
 
 	
@@ -59,19 +75,10 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 		//renderImage();
 		
 		long deltaTime = System.currentTimeMillis() - tStart;
+			
+		updatePositions();
 		
-		double zoom;
-		if (useZoom) 
-			zoom = 1 + (Math.sin( 0.3 * (deltaTime ) / 1000)/10)*2;
-		else 
-			zoom = 1;
-		
-		zoom *= zoom;
-		
-		ComplexNumber startValue = new ComplexNumber(startvalueReal//((Math.cos((0.3*deltaTime)/2000)*(Math.sin(0.3 * (deltaTime ) / 1000))))
-													, startvalueImag);//((Math.sin((0.5*deltaTime)/1000)*(Math.cos(0.4 * (deltaTime ) / 1000))))*1.5); 
-		
-		renderer.renderImage(zoom, startValue);
+		renderer.renderImage(zoom, pCenter, startValue);
 		g.drawImage(mbImage, 0, 0, null);
 		
 		long ltDur = System.currentTimeMillis() - ltStart;
@@ -114,11 +121,69 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 		System.out.println("Fractal Time 1337");			
 	}
 
+	private ComplexNumber centerSrc = null;
+	private ComplexNumber centerDest = null;
+	private double zoomStart;
+	private double zoomDest;
+	private long zoomTimeStart;
+	final long ZOOM_DURATION = 400;
+	final double ZOOM_FACTOR = 2.; // to da squareee !! :D
+	
+	private void initZoom(int x, int y)
+	{
+		if(state != ProgramState.IDLE)
+			return;
+		
+		state = ProgramState.ZOOMING;
+		
+		centerSrc = new ComplexNumber(pCenter); 
+		centerDest = Mandelbrot.cnFromPixelZoom(x, y, width, height, zoom, pCenter.getReal(), pCenter.getImag());
+		zoomStart = zoom;
+		zoomDest = zoom * ZOOM_FACTOR * ZOOM_FACTOR;
+		zoomTimeStart = System.currentTimeMillis();
+	}
+	
+	private void updatePositions()
+	{
+		switch (state) {
+		case ZOOMING:
+						
+			long ticksNow = System.currentTimeMillis() - zoomTimeStart;
+			if(ticksNow >= ZOOM_DURATION)
+			{
+				ticksNow = ZOOM_DURATION;
+				state = ProgramState.IDLE;
+				
+				System.out.println("Zoom finished..");
+			}
+			
+			double zProgres = ticksNow / (double)ZOOM_DURATION;						
+			zoom = zoomStart + (zoomDest - zoomStart) * zProgres;			
+			pCenter.setImag(centerSrc.getImag() + (centerDest.getImag() - centerSrc.getImag()) * zProgres );
+			pCenter.setReal(centerSrc.getReal() + (centerDest.getReal() - centerSrc.getReal()) * zProgres );
+			
+			break;
 
+		default:
+			break;
+		}
+	}
+	
+	private long lastClick = 0;
+	final static long DOUBLECLICKMAXDIFF = 350;
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		if(System.currentTimeMillis() - lastClick < DOUBLECLICKMAXDIFF)
+		{
+			System.out.println("Zoom initiated...");
+			initZoom(e.getPoint().x, e.getPoint().y);
+		}
+		else
+		{
+			lastClick = System.currentTimeMillis();
+		}
 	}
 
 
@@ -160,14 +225,26 @@ public class Program extends JPanel implements KeyListener, MouseListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub		
-		char key = e.getKeyChar();
-		int keycode = e.getKeyCode();
 		
-		System.out.println("pressed : "+key + "mit dem code : " + String.valueOf(keycode));
-		if(keycode == 38){startvalueReal = startvalueReal + 0.01;}
-		if(keycode == 40){startvalueReal=startvalueReal-0.01;}
-		if(keycode == 37){startvalueImag=startvalueImag+0.01;}
-		if(keycode == 39){startvalueImag=startvalueImag-0.01;}
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_UP:
+			startValue.setReal(startValue.getReal() + 0.01);
+			break;
+		case KeyEvent.VK_DOWN:
+			startValue.setReal(startValue.getReal() - 0.01);
+			break;
+		case KeyEvent.VK_RIGHT:
+			startValue.setImag(startValue.getImag() + 0.01);
+			break;
+		case KeyEvent.VK_LEFT:
+			startValue.setImag(startValue.getImag() - 0.01);
+			break;		
+		case KeyEvent.VK_ESCAPE:
+			startValue.setImag(0);
+			startValue.setReal(0);
+			zoom = 1.;
+			pCenter = new ComplexNumber(-.5, 0);
+		}		
 		
 		
 	}

@@ -14,11 +14,12 @@ public class MBRenderThread extends Thread {
 	final byte[] pixelArray;
 	final int winWidth, winHeight;
 	double zoom;
+	ComplexNumber pCenter;
 	ComplexNumber startValue;
 	
 	//Be careful, to not write in the same Image Segments :D
 	
-	public MBRenderThread(BufferedImage biImage, int x, int y, int renderWidth, int renderHeight, double dZoom, ComplexNumber stValue)
+	public MBRenderThread(BufferedImage biImage, int x, int y, int renderWidth, int renderHeight, double dZoom, ComplexNumber center, ComplexNumber stValue)
 	{
 		this.x = x;
 		this.y = y;
@@ -30,6 +31,7 @@ public class MBRenderThread extends Thread {
 		winWidth = biImage.getWidth();
 		winHeight = biImage.getHeight();
 		zoom = dZoom;
+		pCenter = new ComplexNumber(center);				
 		startValue = stValue;
 	}
 	
@@ -52,7 +54,7 @@ public class MBRenderThread extends Thread {
 				
 				int iter = Mandelbrot.MAX_ITER;
 				
-				iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom ,-0.5, 0),startValue);			
+				iter = Mandelbrot.isInMandel(Mandelbrot.cnFromPixelZoom(iX, iY, winWidth, winHeight, zoom , pCenter.getReal(), pCenter.getImag()),startValue);			
 											
 				if(iter == Mandelbrot.MAX_ITER)
 				{						

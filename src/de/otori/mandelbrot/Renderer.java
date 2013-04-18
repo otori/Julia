@@ -32,14 +32,14 @@ public class Renderer {
 		activeThreads = new MBRenderThread[this.iThreads];
 	}
 		
-	public void renderImage(double zoom, ComplexNumber startValue)
+	public void renderImage(double zoom, ComplexNumber center, ComplexNumber startValue)
 	{
 		int x, y;
 		for(int i = 0; i < iThreads; i++)
 		{			
 			x = i % xThreads;
 			y = i / xThreads;
-			activeThreads[i] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, startValue);
+			activeThreads[i] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, center, startValue);
 			activeThreads[i].start();
 		}
 		
@@ -63,7 +63,7 @@ public class Renderer {
 				{
 					x = thrCount % xThreads;
 					y = thrCount / xThreads;
-					activeThreads[i] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, startValue);
+					activeThreads[i] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, center, startValue);
 					activeThreads[i].start();
 					thrCount++;
 					if(!(thrCount < anzThreads))
