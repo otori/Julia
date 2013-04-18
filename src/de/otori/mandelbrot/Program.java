@@ -127,7 +127,7 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 	final long ZOOM_DURATION = 400;
 	final double ZOOM_FACTOR = 2.; // to da squareee !! :D
 	
-	private void initZoom(int x, int y)
+	private void initZoom(int x, int y, boolean zoomIn)
 	{
 		if(state != ProgramState.IDLE)
 			return;
@@ -137,7 +137,10 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 		centerSrc = new ComplexNumber(pCenter); 
 		centerDest = Mandelbrot.cnFromPixelZoom(x, y, width, height, zoom, pCenter.getReal(), pCenter.getImag());
 		zoomStart = zoom;
-		zoomDest = zoom * ZOOM_FACTOR * ZOOM_FACTOR;
+		if(zoomIn)
+			zoomDest = zoom * ZOOM_FACTOR * ZOOM_FACTOR;
+		else
+			zoomDest = zoom / ZOOM_FACTOR / ZOOM_FACTOR;
 		zoomTimeStart = System.currentTimeMillis();
 	}
 	
@@ -165,20 +168,36 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 		}
 	}
 	
-	private long lastClick = 0;
+	private long lastClick = 0, lastClickRight = 0;
 	final static long DOUBLECLICKMAXDIFF = 350;
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(System.currentTimeMillis() - lastClick < DOUBLECLICKMAXDIFF)
-		{			
-			initZoom(e.getPoint().x, e.getPoint().y);
-		}
-		else
+		switch (e.getButton())
 		{
-			lastClick = System.currentTimeMillis();
+		case MouseEvent.BUTTON1:
+			if(System.currentTimeMillis() - lastClick < DOUBLECLICKMAXDIFF)
+			{			
+				initZoom(e.getPoint().x, e.getPoint().y, true);
+			}
+			else
+			{
+				lastClick = System.currentTimeMillis();
+			}
+			break;
+		case MouseEvent.BUTTON3: 
+			if(System.currentTimeMillis() - lastClickRight < DOUBLECLICKMAXDIFF)
+			{			
+				initZoom(e.getPoint().x, e.getPoint().y, false);
+			}
+			else
+			{
+				lastClickRight = System.currentTimeMillis();
+			}
+			break;
 		}
+		
 	}
 
 
