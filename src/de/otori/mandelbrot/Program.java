@@ -98,25 +98,30 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		int imWidth = 800, imHeight = 600;
-		
-		Program mbProgram = new Program(imWidth, imHeight, 8);
-		final JFrame frame = new JFrame("Mandelbrot / Julia");		
-        frame.add(mbProgram);
-               
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setSize(imWidth, imHeight);
-        
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-               
-        
-       
-        Insets winInsets = frame.getInsets(); 
-        frame.setSize(imWidth + winInsets.left + winInsets.right, imHeight + winInsets.top + winInsets.bottom);
-        
-		System.out.println("Fractal Time 1337");			
+		if(args.length > 0)
+			CommandLineProgram.cmdMain(args);		//Instead of using a lame GUI :D
+		else
+		{		
+			int imWidth = 800, imHeight = 600;
+			
+			Program mbProgram = new Program(imWidth, imHeight, 8);
+			final JFrame frame = new JFrame("Mandelbrot / Julia");		
+		    frame.add(mbProgram);
+		           
+		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    frame.setResizable(false);
+		    frame.setSize(imWidth, imHeight);
+		    
+		    frame.setLocationRelativeTo(null);
+		    frame.setVisible(true);
+		           
+		    
+		   
+		    Insets winInsets = frame.getInsets(); 
+		    frame.setSize(imWidth + winInsets.left + winInsets.right, imHeight + winInsets.top + winInsets.bottom);
+		    
+			System.out.println("Fractal Time 1337");
+		}
 	}
 
 	private ComplexNumber centerSrc = null;
@@ -246,16 +251,16 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 		
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_UP:
-			startValue.setReal(startValue.getReal() + 0.01);
+			startValue.setReal(startValue.getReal() + 0.01 / Math.sqrt(zoom));
 			break;
 		case KeyEvent.VK_DOWN:
-			startValue.setReal(startValue.getReal() - 0.01);
+			startValue.setReal(startValue.getReal() - 0.01 / Math.sqrt(zoom));
 			break;
 		case KeyEvent.VK_RIGHT:
-			startValue.setImag(startValue.getImag() + 0.01);
+			startValue.setImag(startValue.getImag() + 0.01 / Math.sqrt(zoom));
 			break;
 		case KeyEvent.VK_LEFT:
-			startValue.setImag(startValue.getImag() - 0.01);
+			startValue.setImag(startValue.getImag() - 0.01 / Math.sqrt(zoom));
 			break;		
 		case KeyEvent.VK_ESCAPE:
 			startValue.setImag(0);

@@ -5,7 +5,12 @@ public class Mandelbrot {
 	 * @param args
 	 */
 	
-	public static final int MAX_ITER = 40;
+	public static int MAX_ITER = 50;
+	
+	public static void setIteration(int iter)
+	{
+		MAX_ITER = iter;
+	}
 	
 	public static int isInMandel(final ComplexNumber cn, ComplexNumber startValue)
 	{
