@@ -30,7 +30,6 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 	private ProgramState state;
 	
 	private static final long serialVersionUID = 1L;
-	//use Zoom (true) or don't use (false)
 	private final BufferedImage mbImage;
 	private  int width, height;
 	//private final MBRenderThread[] renderer;
@@ -250,32 +249,28 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub		
-		if(e.getKeyCode() != lastKey) 
-		{lastKey = e.getKeyCode();
-		startOfpressingKey = System.currentTimeMillis();
-		}
-		
-		double startValueShiftFactorTrololo = 1+0.01*(System.currentTimeMillis()-startOfpressingKey);
+
 		
 		switch (e.getKeyCode()) {	
 		
 		case KeyEvent.VK_UP:
-			startValue.setReal(startValue.getReal() + 0.001*startValueShiftFactorTrololo);
+			startValue.setReal(startValue.getReal() + 0.01*(1/(zoom*1.8)));
 			break;
 		case KeyEvent.VK_DOWN:
-			startValue.setReal(startValue.getReal() - 0.001*startValueShiftFactorTrololo);
+			startValue.setReal(startValue.getReal() - 0.01*(1/(zoom*1.8)));
 			break;
 		case KeyEvent.VK_RIGHT:
-			startValue.setImag(startValue.getImag() + 0.001*startValueShiftFactorTrololo);
+			startValue.setImag(startValue.getImag() + 0.01*(1/(zoom*1.8)));
 			break;
 		case KeyEvent.VK_LEFT:
-			startValue.setImag(startValue.getImag() - 0.001*startValueShiftFactorTrololo);
+			startValue.setImag(startValue.getImag() - 0.01*(1/(zoom*1.8)));
 			break;		
 		case KeyEvent.VK_ESCAPE:
 			startValue.setImag(0);
 			startValue.setReal(0);
 			zoom = 1.;
 			pCenter = new ComplexNumber(-.5, 0);
+	
 		}		
 		
 		
