@@ -21,13 +21,7 @@ import de.otori.mandelbrot.Mandelbrot;
 
 public class Program extends JPanel implements KeyListener, MouseListener, MouseMotionListener{
 
-	private enum ProgramState {IDLE, ZOOMING, SHIFTING};
 	
-	/**
-	 * 
-	 */
-	
-	private ProgramState state;
 	
 	private static final long serialVersionUID = 1L;
 	private final BufferedImage mbImage;
@@ -123,30 +117,7 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 		}
 	}
 
-	private ComplexNumber centerSrc = null;
-	private ComplexNumber centerDest = null;
-	private double zoomStart;
-	private double zoomDest;
-	private long zoomTimeStart;
-	final long ZOOM_DURATION = 400;
-	final double ZOOM_FACTOR = 2.; // to da squareee !! :D
 	
-	private void initZoom(int x, int y, boolean zoomIn)
-	{
-		if(state != ProgramState.IDLE)
-			return;
-		
-		state = ProgramState.ZOOMING;
-		
-		centerSrc = new ComplexNumber(pCenter); 
-		centerDest = Mandelbrot.cnFromPixelZoom(x, y, width, height, zoom, pCenter.getReal(), pCenter.getImag());
-		zoomStart = zoom;
-		if(zoomIn)
-			zoomDest = zoom * ZOOM_FACTOR * ZOOM_FACTOR;
-		else
-			zoomDest = zoom / ZOOM_FACTOR / ZOOM_FACTOR;
-		zoomTimeStart = System.currentTimeMillis();
-	}
 	
 	private void updatePositions()
 	{
@@ -200,8 +171,7 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 				lastClickRight = System.currentTimeMillis();
 			}
 			break;
-		}
-		
+		}		
 	}
 
 
@@ -269,11 +239,8 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 			startValue.setImag(0);
 			startValue.setReal(0);
 			zoom = 1.;
-			pCenter = new ComplexNumber(-.5, 0);
-	
+			pCenter = new ComplexNumber(-.5, 0);	
 		}		
-		
-		
 	}
 
 

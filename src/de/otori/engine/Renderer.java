@@ -1,4 +1,4 @@
-package de.otori.mandelbrot;
+package de.otori.engine;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -14,8 +14,10 @@ public class Renderer {
 	final Dimension threadRenderArea;
 	
 	final int xThreads, yThreads;
-	
-	public Renderer(BufferedImage biImage, int iThreads, Dimension renderArea)
+
+	final FraktalProgram fraktal;
+
+	public Renderer(FraktalProgram fraktal, BufferedImage biImage, int iThreads, Dimension renderArea)
 	{
 		width = biImage.getWidth();
 		height = biImage.getHeight();
@@ -30,16 +32,18 @@ public class Renderer {
 		this.iThreads = Math.min(iThreads, xThreads * yThreads);
 				
 		activeThreads = new MBRenderThread[this.iThreads];
+		
+		this.fraktal = fraktal;
 	}
 		
-	public void renderImage(double zoom, ComplexNumber center, ComplexNumber startValue)
+	public void renderImage(double zoom, double centerX, double centerY)
 	{
 		int x, y;
 		for(int i = 0; i < iThreads; i++)
 		{			
 			x = i % xThreads;
 			y = i / xThreads;
-			activeThreads[i] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, center, startValue);
+			activeThreads[i] = new MBRenderThread(biImage, fraktal, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, centerX, centerY);
 			activeThreads[i].start();
 		}
 		
@@ -63,7 +67,7 @@ public class Renderer {
 				{
 					x = thrCount % xThreads;
 					y = thrCount / xThreads;
-					activeThreads[i] = new MBRenderThread(biImage, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, center, startValue);
+					activeThreads[i] = new MBRenderThread(biImage, fraktal, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, centerX, centerY);
 					activeThreads[i].start();
 					thrCount++;
 					if(!(thrCount < anzThreads))
