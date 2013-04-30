@@ -30,7 +30,7 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	@Override
 	public void preRendering() {
 		updatePositions();
-		System.out.println(String.format("Debug: Center: (%f,%f) zoom: %f", center.x, center.y, zoom));
+		//System.out.println(String.format("Debug: Center: (%f,%f) zoom: %f", center.x, center.y, zoom));
 	}
 	
 	@Override
@@ -69,10 +69,15 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 		if(state != ProgramState.IDLE)
 			return;
 		
+		System.out.println(String.format("Debug: Center: (%f,%f) zoom: %f", center.x, center.y, zoom));
+		System.out.println(String.format("Window size: (%d,%d)", winWidth, winHeight));
+		System.out.println("Clicked on (" + x + "," + y + ")");
+		
 		state = ProgramState.ZOOMING;
 		
 		zCenterSrc = new Point2F(center);		
 		zCenterDest = Misc.calculatePixelRealCoordinates(x, y, winWidth, winHeight, zoom, center);
+		System.out.println(String.format("Center Dest: (%f,%f)", zCenterDest.x, zCenterDest.y));
 		zoomStart = zoom;
 		if(zoomIn)
 			zoomDest = zoom * ZOOM_FACTOR * ZOOM_FACTOR;
@@ -96,7 +101,7 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 			double zProgres = ticksNow / (double)ZOOM_DURATION;						
 			zoom = zoomStart + (zoomDest - zoomStart) * zProgres;			
 			center.y = zCenterSrc.y + (zCenterDest.y - zCenterSrc.y) * zProgres;
-			center.y = zCenterSrc.x + (zCenterDest.x - zCenterSrc.x) * zProgres;
+			center.x = zCenterSrc.x + (zCenterDest.x - zCenterSrc.x) * zProgres;
 			
 			break;
 
