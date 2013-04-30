@@ -10,12 +10,12 @@ public class MBRenderThread extends Thread {
 	final byte[] pixelArray;
 	final int winWidth, winHeight;
 	double zoom;
-	double centerX, centerY;	
-	FraktalProgram fraktal;	
+	Point2F center;	
+	private  final FraktalProgram fraktal;	
 	
 	//Be careful, to not write in the same Image Segments :D
 	
-	public MBRenderThread(BufferedImage biImage, FraktalProgram fraktal, int x, int y, int renderWidth, int renderHeight, double dZoom, double xCenter, double yCenter)
+	public MBRenderThread(BufferedImage biImage, FraktalProgram fraktal, int x, int y, int renderWidth, int renderHeight, double dZoom, Point2F center)
 	{
 		this.fraktal = fraktal;
 		
@@ -29,8 +29,7 @@ public class MBRenderThread extends Thread {
 		winWidth = biImage.getWidth();
 		winHeight = biImage.getHeight();
 		zoom = dZoom;
-		centerX = xCenter;
-		centerY = yCenter;					
+		this.center = new Point2F(center);	
 		
 	}
 	
@@ -46,12 +45,14 @@ public class MBRenderThread extends Thread {
 		int yMax = Math.min(y + renderHeight, winHeight);
 		
 		Color col;
+		Point2F renderPoint;
 		
 		for(int iX = x; iX < xMax; iX++)
 		{
 			for(int iY = y; iY < yMax; iY++)
 			{				
-				col = fraktal.calcPixel(iX, iY, centerX, centerY, zoom);
+				renderPoint = Misc.calculatePixelRealCoordinates(iX, iY, winWidth, winHeight, zoom, center);
+				col = fraktal.calcPixel(renderPoint);
 				
 				pixelArray[iY * winWidth * 3 + iX * 3] = (byte)col.getBlue();
 				pixelArray[iY * winWidth * 3 + iX * 3 + 1] = (byte)col.getGreen();

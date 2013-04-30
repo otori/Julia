@@ -13,30 +13,41 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	 * Indicates zoom level
 	 */
 	protected double zoom;
-	Point2F center;
+	protected Point2F center;
 		
 	protected int winWidth;
 	protected int winHeight;		
 	
 	private enum ProgramState {IDLE, ZOOMING, SHIFTING};		
-	private ProgramState state; // For sample zooming implementation
+	private ProgramState state = ProgramState.IDLE; // For sample zooming implementation
+	
+	public void setWindowSize(int width, int height)
+	{
+		winWidth = width;
+		winHeight = height;
+	}	
 	
 	@Override
 	public void preRendering() {
 		updatePositions();
+		System.out.println(String.format("Debug: Center: (%f,%f) zoom: %f", center.x, center.y, zoom));
 	}
 	
 	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub		
+	public void postRendering() {
+		//Nothing yet...
+		//Feel free to overide HEHE
 	}
 	
-	@Override	
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void setZoom(double z)
+	{
+		zoom = z;
 	}
 	
+	public void setCenter(Point2F p)
+	{
+		center = new Point2F(p);
+	}
 	
 	private long lastClick = 0, lastClickRight = 0;
 	final static long DOUBLECLICKMAXDIFF = 350;
@@ -97,13 +108,13 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		switch (e.getButton())
 		{
 		case MouseEvent.BUTTON1:
 			if(System.currentTimeMillis() - lastClick < DOUBLECLICKMAXDIFF)
 			{			
-				initZoom(e.getPoint().x, e.getPoint().y, true);
+				initZoom(e.getPoint().x, e.getPoint().y, true);				
 			}
 			else
 			{
@@ -135,14 +146,38 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 		
 	}
 	
+	private Point2F centerPressed = null, centerStart = null;
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		centerPressed = Misc.calculatePixelRealCoordinates(e.getPoint().x, e.getPoint().y, winWidth, winHeight, zoom, center);
+		centerStart = new Point2F(center);
 	}
 	
 	@Override	
 	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		centerPressed = null;
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		if(centerPressed != null && state == ProgramState.IDLE)
+		{			
+			Point2F curPos = Misc.calculatePixelRealCoordinates(e.getPoint().x, e.getPoint().y, winWidth, winHeight, zoom, center);
+			
+			double deltaReal = (curPos.x - centerPressed.x) / 1.25;
+			double deltaImag = (curPos.y - centerPressed.y) / 1.25;
+			
+			center.x = centerStart.x - deltaReal;
+			center.y = centerStart.y - deltaImag;
+		}
+	}
+	
+	@Override	
+	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

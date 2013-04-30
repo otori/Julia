@@ -8,11 +8,10 @@ public interface Renderable {
 	 * Implement a function to calculate the Color of Position (x,y)
 	 * Please only implement Thread-safe functions!
 	 * 
-	 * @param x x-Coordinate of image
-	 * @param y y-Coordinate of image
+	 * @param coordinate Position (x,y)
 	 * @return Color of the image point (x|y)
 	 */
-	public Color calcPixel(double x, double y, double cenX, double cenY, double zoom); // Make it Renderable 
+	public Color calcPixel(Point2F coordinate); // Make it Renderable 
 
 	/**
 	 * Function is called once, before frame is rendered.

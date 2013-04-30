@@ -1,4 +1,4 @@
-package de.otori.mandelbrot;
+package de.otori.engine;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -6,8 +6,14 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.management.MBeanFeatureInfo;
 
 import com.martiansoftware.jsap.*;
+
+import de.otori.engine.Point2F;
+import de.otori.engine.Program;
+import de.otori.engine.Renderer;
+import de.otori.mandelbrot.Mandelbrot;
 
 public class CommandLineProgram {
 	
@@ -38,7 +44,7 @@ public class CommandLineProgram {
 			double centerY = config.getDouble("CenterY");
 			double zoom = config.getDouble("Zoom");
 			
-			runProgram(x, y, iThreads, iterations, new ComplexNumber(centerX, centerY), zoom, outFile);
+			runProgram(x, y, iThreads, iterations, new Point2F(centerX, centerY), zoom, outFile);
 			
 			System.exit(0);			
 		}
@@ -52,13 +58,15 @@ public class CommandLineProgram {
 		}
 	}
 	
-	private static void runProgram(int x, int y, int iThreads, int iterations, ComplexNumber center, double zoom, String outName)
+	private static void runProgram(int x, int y, int iThreads, int iterations, Point2F center, double zoom, String outName)
 	{
 		Mandelbrot.setIteration(iterations);
 		
 		BufferedImage biImage = new BufferedImage(x, y, BufferedImage.TYPE_3BYTE_BGR);
-		Renderer renderer = new Renderer(biImage, iThreads, new Dimension(160, 160));
-		renderer.renderImage(zoom, center, new ComplexNumber(0, 0));
+		Renderer renderer = new Renderer(Mandelbrot.MBFraktal, biImage, iThreads, new Dimension(160, 160));
+		Mandelbrot.MBFraktal.setZoom(zoom);
+		Mandelbrot.MBFraktal.setCenter(center);
+		renderer.renderImage();
 		File outFile = new File(outName); 
 		try
 		{

@@ -15,8 +15,8 @@ public class Renderer {
 	
 	final int xThreads, yThreads;
 
-	final FraktalProgram fraktal;
-
+	private FraktalProgram fraktal;
+	
 	public Renderer(FraktalProgram fraktal, BufferedImage biImage, int iThreads, Dimension renderArea)
 	{
 		width = biImage.getWidth();
@@ -34,16 +34,24 @@ public class Renderer {
 		activeThreads = new MBRenderThread[this.iThreads];
 		
 		this.fraktal = fraktal;
+				
 	}
 		
-	public void renderImage(double zoom, double centerX, double centerY)
-	{
+	public void setFraktalProgram(FraktalProgram frak)
+	{		
+		fraktal = frak;
+	}
+	
+	public void renderImage()
+	{		
+		fraktal.preRendering();
+		
 		int x, y;
 		for(int i = 0; i < iThreads; i++)
 		{			
 			x = i % xThreads;
 			y = i / xThreads;
-			activeThreads[i] = new MBRenderThread(biImage, fraktal, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, centerX, centerY);
+			activeThreads[i] = new MBRenderThread(biImage, fraktal, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, fraktal.zoom, fraktal.center);
 			activeThreads[i].start();
 		}
 		
@@ -67,7 +75,7 @@ public class Renderer {
 				{
 					x = thrCount % xThreads;
 					y = thrCount / xThreads;
-					activeThreads[i] = new MBRenderThread(biImage, fraktal, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, zoom, centerX, centerY);
+					activeThreads[i] = new MBRenderThread(biImage, fraktal, x * threadRenderArea.width, y * threadRenderArea.height, threadRenderArea.width, threadRenderArea.height, fraktal.zoom, fraktal.center);
 					activeThreads[i].start();
 					thrCount++;
 					if(!(thrCount < anzThreads))
@@ -88,8 +96,9 @@ public class Renderer {
 					e.printStackTrace();
 				}
 			}
-		}		
+		}	
 		
+		fraktal.postRendering();
 	}
 	
 }
