@@ -21,6 +21,10 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	private enum ProgramState {IDLE, ZOOMING, SHIFTING};		
 	private ProgramState state; // For sample zooming implementation
 	
+	@Override
+	public void preRendering() {
+		updatePositions();
+	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
@@ -64,6 +68,30 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 		else
 			zoomDest = zoom / ZOOM_FACTOR / ZOOM_FACTOR;
 		zoomTimeStart = System.currentTimeMillis();
+	}
+		
+	private void updatePositions()
+	{
+		switch (state) {
+		case ZOOMING:
+						
+			long ticksNow = System.currentTimeMillis() - zoomTimeStart;
+			if(ticksNow >= ZOOM_DURATION)
+			{
+				ticksNow = ZOOM_DURATION;
+				state = ProgramState.IDLE;				
+			}
+			
+			double zProgres = ticksNow / (double)ZOOM_DURATION;						
+			zoom = zoomStart + (zoomDest - zoomStart) * zProgres;			
+			center.y = zCenterSrc.y + (zCenterDest.y - zCenterSrc.y) * zProgres;
+			center.y = zCenterSrc.x + (zCenterDest.x - zCenterSrc.x) * zProgres;
+			
+			break;
+
+		default:
+			break;
+		}
 	}
 	
 	@Override

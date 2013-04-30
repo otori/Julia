@@ -118,31 +118,6 @@ public class Program extends JPanel implements KeyListener, MouseListener, Mouse
 	}
 
 	
-	
-	private void updatePositions()
-	{
-		switch (state) {
-		case ZOOMING:
-						
-			long ticksNow = System.currentTimeMillis() - zoomTimeStart;
-			if(ticksNow >= ZOOM_DURATION)
-			{
-				ticksNow = ZOOM_DURATION;
-				state = ProgramState.IDLE;				
-			}
-			
-			double zProgres = ticksNow / (double)ZOOM_DURATION;						
-			zoom = zoomStart + (zoomDest - zoomStart) * zProgres;			
-			pCenter.setImag(centerSrc.getImag() + (centerDest.getImag() - centerSrc.getImag()) * zProgres);
-			pCenter.setReal(centerSrc.getReal() + (centerDest.getReal() - centerSrc.getReal()) * zProgres);
-			
-			break;
-
-		default:
-			break;
-		}
-	}
-	
 	private long lastClick = 0, lastClickRight = 0;
 	final static long DOUBLECLICKMAXDIFF = 350;
 	
