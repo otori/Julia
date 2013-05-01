@@ -15,4 +15,6 @@ public class Point2F {
 		x = p.x;
 		y = p.y;
 	}
+	
+	
 }
