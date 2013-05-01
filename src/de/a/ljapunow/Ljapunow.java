@@ -7,8 +7,8 @@ import java.awt.Color;
 
 import de.otori.engine.FraktalProgram;
 import de.otori.engine.Point2F;
-import de.otori.mandelbrot.ComplexNumber;
 import de.otori.mandelbrot.Mandelbrot;
+
 
 /**
  * @author arndt
@@ -16,6 +16,7 @@ import de.otori.mandelbrot.Mandelbrot;
  */
 public class Ljapunow extends FraktalProgram {
 	public static final Ljapunow LjFraktal = new Ljapunow();
+
 
 
 	/**
@@ -42,12 +43,18 @@ public class Ljapunow extends FraktalProgram {
 		MAX_ITER = iter;
 	}
 
-	 public void leTest(){
+	/* public void leTest(){
 		double test = logisticEquation(new boolean[] {true,false,true}, new Point2F(2,3));
 	 System.out.println(test);
-	 }
+	 }*/
 	 
-	double  logisticEquation(boolean[] sequence, Point2F position){
+	 /**
+	  * the logistic equation creates some deterministic chaos
+	  * @param sequence a rather small one dimensonial array of booleans
+	  * @param position Pixel to be calculated
+	  * @return a chaotic number 
+	  */
+	double  ljaunowCalculation(boolean[] sequence, Point2F position){
 		double logisticFactor = startValue;
 		double a = position.x ;
 		double b = position.y;
@@ -61,23 +68,42 @@ public class Ljapunow extends FraktalProgram {
 				
 			}
 		}
-		return logisticFactor;
+		if(sequence[(MAX_ITER%sequence.length)])
+		{return ljapunowExponent(logisticFactor, a);}
+		else{return ljapunowExponent(logisticFactor, b);}
 	}
-	 
-	public double ljapunowExponent  (){return 0;}
+	
+	 /**
+	 * 
+	 * @return
+	 */
+	public double ljapunowExponent  (double Xn, double Rn ){
+		double Sum = 0;
+		for (int n =1; n<=PSEUDO_INFINITY;n++){
+			Sum = Sum + Math.log(Math.abs(Rn*(1-Xn)));
+		}
+		double lambda = Sum/ PSEUDO_INFINITY;
+	return lambda;	
+		}
 	
 	@Override
 	public Color calcPixel(Point2F coordinate) {
-		// TODO Auto-generated method stub
-		return null;
+	
+		double temp = 0; 
+				temp =ljaunowCalculation(new boolean[] {true,false,true,true}, coordinate);
+		
+	if(temp<0) {return Color.BLACK;}
+	
+	
+	 
+		
+	int colVal = (int)( Mandelbrot.sqrtFakeAprox((int) temp) * 255)%255;					
+
+		return new Color(colVal, 255-colVal, 0);
+				
+	
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
-	}
 
 }

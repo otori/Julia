@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import de.a.ljapunow.Ljapunow;
 import de.otori.mandelbrot.Mandelbrot;
 
 public class Program extends JPanel{
@@ -30,7 +31,8 @@ public class Program extends JPanel{
 		
 		mbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 		
-		currentFraktal = Mandelbrot.MBFraktal;
+	//	currentFraktal = Mandelbrot.MBFraktal;
+		currentFraktal= Ljapunow.LjFraktal;
 		currentFraktal.setWindowSize(width, height);
 		renderer = new Renderer(currentFraktal, mbImage, iThreads, new Dimension(160,160));
 		
@@ -82,6 +84,7 @@ public class Program extends JPanel{
 		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    frame.setResizable(false);
 		    frame.setSize(imWidth, imHeight);
+		   
 		    
 		    frame.setLocationRelativeTo(null);
 		    frame.setVisible(true);
