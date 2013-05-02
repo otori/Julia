@@ -30,7 +30,7 @@ Der Rand der Menge weist eine Selbstähnlichkeit auf, die jedoch nicht exakt ist
 Die Visualisierung der Menge wird im allgemeinen Sprachgebrauch oft auch Apfelmännchen genannt.
 Die ersten computergrafischen Darstellungen wurden 1978 von Robert Brooks und Peter Matelski vorgestellt.
 1980 veröffentlichte Benoît Mandelbrot, nach dem die Menge benannt wurde, eine Arbeit über das Thema."[Wikipedia](http://de.wikipedia.org/wiki/Mandelbrot-Menge)
-Bedinung
+Bedienung
 --------
 Wenn das Programm gestartet ist, kann man durch Doppelklick Zoomen und durch Doppelrechtsklick rauszoomen.
 Mit den Pfeiltasten kann man die Gestalt des Fraktals Manipulieren. Mit Escape kommt man wieder in die Ausgangsposition.
