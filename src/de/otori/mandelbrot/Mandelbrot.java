@@ -3,6 +3,8 @@ package de.otori.mandelbrot;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
+import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
+
 import de.otori.engine.FraktalProgram;
 import de.otori.engine.Point2F;
 import de.otori.misc.ColorFun;
@@ -26,7 +28,6 @@ public class Mandelbrot extends FraktalProgram {
 	
 	private void initColors()
 	{		
-		System.out.println("Initalizing colors!");
 		colors = new Color[MAX_ITER + 1];
 		for(int i = 0; i < MAX_ITER; ++i)
 		{
@@ -142,13 +143,25 @@ public class Mandelbrot extends FraktalProgram {
 			break;
 		case KeyEvent.VK_LEFT:
 			startValue.setImag(startValue.getImag() - 0.01*(1/(zoom*1.8)));
-			break;		
+			break;	
+		case KeyEvent.VK_ADD:
+		case KeyEvent.VK_PLUS: 
+			int mIter = MAX_ITER + 10;
+			setIteration(mIter);
+			break;
+		case KeyEvent.VK_SUBTRACT:
+		case KeyEvent.VK_MINUS:
+			mIter = MAX_ITER - 10;
+			while(mIter < 1) mIter += 10;
+			setIteration(mIter);
+			break;
 		case KeyEvent.VK_ESCAPE:
 			startValue.setImag(0);
 			startValue.setReal(0);
 			zoom = 1.;
 			center.x = -.5;
 			center.y =  .0;	
+			break;
 		}		
 	}
 	
