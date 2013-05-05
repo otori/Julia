@@ -18,8 +18,8 @@ public class Program extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private final BufferedImage mbImage;
 	private int width, height;
-	//private final MBRenderThread[] renderer;	
-	private final Renderer renderer;
+	private final Renderer renderer;	
+
 	FraktalProgram currentFraktal;
 	
 	public Program(final int winWidth, final int winHeight, final int iThreads)

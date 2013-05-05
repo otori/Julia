@@ -23,6 +23,7 @@ public class Ljapunow extends FraktalProgram {
 	 */
 	public static int MAX_ITER = 50;
 	public static int PSEUDO_INFINITY = 7;
+	public static double Farbveschiebung = 0;
 	boolean[] Folge = { true, true, true, true, true, true, false, false,
 			false, false, false, false };
 	double startValue;
@@ -92,24 +93,30 @@ public class Ljapunow extends FraktalProgram {
 	public Color calcPixel(Point2F coordinate) {
 
 		double temp = 0;
-	   temp = ljaunowCalculation(Folge, coordinate);
+	  temp = ljaunowCalculation(Folge, coordinate);
 
-		int colVal = 0;
-		int colVal2 = 0;
-		int colVal3 = 0;
+		int rotKomponente = 0;
+		int greenComp = 0;
+		int blueComp = 0;
+		
+		
 		if (temp < 0) {
-			colVal2 = ((int) Math.abs((temp * -1) * 100)) % 255;
-			colVal =  Math.abs(((int) (temp * 255))) % 255;
+		
+			rotKomponente =  Math.abs(((int) (temp * 50))) % 255;
 		}
 
 		else {
-			colVal = ((int) (temp)) % 255;
+			//rotKomponente = (int)  (( (Math.sin(Math.sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y+Farbveschiebung))+1)*100)) ;
 		}
 		if (0 < temp && temp < 10) {
-			colVal3 = Math.abs(((int) (temp * 255))) % 255;
-		}
-
-		return new Color(colVal, colVal2, colVal3);
+			blueComp = Math.abs(((int) (temp * 200))) % 255;}
+		if (0 < temp && temp < Farbveschiebung) {
+			greenComp = Math.abs(((int) (temp *400))) % 255;}
+				//	rotKomponente = (int)  (( (Math.sin(Math.sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y+Farbveschiebung))+1)*100)) ;
+					//greenComp = (int)  (( (Math.cos(Math.sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y+Farbveschiebung))+1)*100)) ;
+				//	blueComp = (int)(Math.sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y)+Math.atan2(coordinate.x, coordinate.y));
+					
+		return new Color(rotKomponente, greenComp, blueComp);
 
 	}
 
@@ -126,10 +133,10 @@ public class Ljapunow extends FraktalProgram {
 			startValue = startValue - 0.001 * (1 / (zoom * 1.8));
 			break;
 		case KeyEvent.VK_RIGHT:
-			Folge[0] = !Folge[0];
+			Farbveschiebung = Farbveschiebung + 0.1 * (1 / (zoom * 1.8));
 			break;
 		case KeyEvent.VK_LEFT:
-			Folge[1] = !Folge[1];
+			Farbveschiebung =  (Farbveschiebung - 0.1 * (1 / (zoom * 1.8)));
 			break;
 		case KeyEvent.VK_ESCAPE:
 			startValue = 0.5;
