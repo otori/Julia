@@ -35,6 +35,43 @@ Bedienung
 Wenn das Programm gestartet ist, kann man durch Doppelklick Zoomen und durch Doppelrechtsklick rauszoomen.
 Mit den Pfeiltasten kann man die Gestalt des Fraktals Manipulieren. Mit Escape kommt man wieder in die Ausgangsposition.
 
+Terminal Argumente:
+
+Ermöglicht das Erzeugen von Bildern im PNG Format:
+
+Usage: 
+[(-h|--help)[:<Help>]] [(-c|--console)[:<Console>]] (-x|--resolution-x) <Image width> (-y|--resolution-y) <Image height> [(-t|--threads) <Amount of threads used. [Default: Cores * 1.5]>] (-i|--iterations) <Iterations to check for mandelbrot> --center-x <Real part of Complex Number to zoom.> --center-y <Imag part of Complex Number to zoom.> (-z|--zoom) <factor to zoom.> <Output image file.>
+
+  [(-h|--help)[:<Help>]]
+
+  [(-c|--console)[:<Console>]]
+        Enables Console Mode
+
+  (-x|--resolution-x) <Image width>
+        (default: 800)
+
+  (-y|--resolution-y) <Image height>
+        (default: 600)
+
+  [(-t|--threads) <Amount of threads used. [Default: Cores * 1.5]>]
+
+  (-i|--iterations) <Iterations to check for mandelbrot>
+        (default: 200)
+
+  --center-x <Real part of Complex Number to zoom.>
+        (default: -.5)
+
+  --center-y <Imag part of Complex Number to zoom.>
+        (default: 0.0)
+
+  (-z|--zoom) <factor to zoom.>
+        (default: 1)
+
+  <Output image file.>
+        (default: fraktal_out.png)
+
+
+
 License
 =======
 You may use Julia under the terms of the ISC License(See [LICENSE](LICENSE)).
