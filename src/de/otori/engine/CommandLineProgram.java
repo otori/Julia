@@ -60,7 +60,7 @@ public class CommandLineProgram {
 	
 	private static void runProgram(int x, int y, int iThreads, int iterations, Point2F center, double zoom, String outName)
 	{
-		Mandelbrot.setIteration(iterations);
+		Mandelbrot.MBFraktal.setIteration(iterations);
 		
 		BufferedImage biImage = new BufferedImage(x, y, BufferedImage.TYPE_3BYTE_BGR);
 		Renderer renderer = new Renderer(Mandelbrot.MBFraktal, biImage, iThreads, new Dimension(160, 160));
