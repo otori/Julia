@@ -95,14 +95,14 @@ public class Ljapunow extends FraktalProgram {
 		double temp = 0;
 	  temp = ljaunowCalculation(Folge, coordinate);
 
-		int rotKomponente = 0;
+		int redComp = 0;
 		int greenComp = 0;
 		int blueComp = 0;
 		
 		
 		if (temp < 0) {
 		
-			rotKomponente =  Math.abs(((int) (temp * 50))) % 255;
+			redComp =  Math.abs(((int) (temp * 50))) % 255;
 		}
 
 		else {
@@ -116,7 +116,7 @@ public class Ljapunow extends FraktalProgram {
 					//greenComp = (int)  (( (Math.cos(Math.sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y+Farbveschiebung))+1)*100)) ;
 				//	blueComp = (int)(Math.sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y)+Math.atan2(coordinate.x, coordinate.y));
 					
-		return new Color(rotKomponente, greenComp, blueComp);
+		return new Color(redComp, greenComp, blueComp);
 
 	}
 
