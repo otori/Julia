@@ -14,7 +14,7 @@ import de.otori.misc.ColorFun;
  */
 public class Mandelbrot extends FraktalProgram {
 	
-	private static enum ColorMode{RAINBOW, GREENTORED, PSYCHO};
+	public static enum ColorMode{RAINBOW, GREENTORED, PSYCHO};
 	
 	public static final Mandelbrot MBFraktal = new Mandelbrot();
 	private ColorMode cMode;
