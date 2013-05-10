@@ -11,7 +11,7 @@ import de.otori.engine.Point2F;
 
 
 /**
- * @author arndt http://de.wikipedia.org/wiki/Ljapunow-Fraktal
+ *  http://de.wikipedia.org/wiki/Ljapunow-Fraktal
  */
 public class Ljapunow extends FraktalProgram {
 	public static final Ljapunow LjFraktal = new Ljapunow();
@@ -21,8 +21,8 @@ public class Ljapunow extends FraktalProgram {
 	 * computation: A high number results in longer computation time, a low in
 	 * less quality
 	 */
-	public static int MAX_ITER = 50;
-	public static int PSEUDO_INFINITY = 7;
+	public static int MAX_ITER = 100;
+	public static int PSEUDO_INFINITY = 10;
 	public static double Farbveschiebung = 0;
 	boolean[] Folge = { true, true, true, true, true, true, false, false,
 			false, false, false, false };

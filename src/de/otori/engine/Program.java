@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import de.a.fakefraktal.FakeFraktal;
 import de.a.ljapunow.Ljapunow;
 import de.otori.mandelbrot.Mandelbrot;
 
@@ -31,8 +32,9 @@ public class Program extends JPanel{
 		
 		mbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 		
-		currentFraktal = Mandelbrot.MBFraktal;
+	//	currentFraktal = Mandelbrot.MBFraktal;
 	//	currentFraktal = Ljapunow.LjFraktal;
+		currentFraktal = FakeFraktal.FakeFraktal;
 		currentFraktal.setWindowSize(width, height);
 		renderer = new Renderer(currentFraktal, mbImage, iThreads, new Dimension(160,160));
 		
