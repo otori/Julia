@@ -3,10 +3,11 @@ package de.otori.mandelbrot;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
-import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
-
 import de.otori.engine.FraktalProgram;
 import de.otori.engine.Point2F;
+import de.otori.engine.animation.AnimationEvent;
+import de.otori.mandelbrot.mandelbrotEvents.ColorModeChanged;
+import de.otori.mandelbrot.mandelbrotEvents.IterationChanged;
 import de.otori.misc.ColorFun;
 
 /**
@@ -15,9 +16,11 @@ import de.otori.misc.ColorFun;
 public class Mandelbrot extends FraktalProgram {
 	
 	public static enum ColorMode{RAINBOW, GREENTORED, PSYCHO};
-	
+	private enum MBState {IDLE, CHANINGITERATION}
+		
 	public static final Mandelbrot MBFraktal = new Mandelbrot();
 	private ColorMode cMode;
+	private MBState state;
 	private Color[] colors;
 	
 	private static Color rainbow(double v) {
@@ -58,6 +61,7 @@ public class Mandelbrot extends FraktalProgram {
 		startValue = new ComplexNumber(0, 0); 
 		center = new Point2F(-.5, 0);
 		zoom = 1.;
+		state = MBState.IDLE;
 		initColors();		
 	}
 	
@@ -100,6 +104,13 @@ public class Mandelbrot extends FraktalProgram {
 	}
 		
 	@Override
+	public void preRendering() 
+	{
+		super.preRendering();
+		updateData();	
+	}
+	
+	@Override
 	public Color calcPixel(Point2F point) {
 		// TODO Auto-generated method stub
 						
@@ -124,6 +135,59 @@ public class Mandelbrot extends FraktalProgram {
 			
 	}	
 
+	@Override
+	public void handleEvent(AnimationEvent event) 
+	{
+		super.handleEvent(event);
+		
+		if (event instanceof IterationChanged)
+		{
+			
+		}
+		if (event instanceof ColorModeChanged)
+		{
+			cMode = ((ColorModeChanged)event).getcMode();
+		}
+	}
+	
+	private int iterationSrc, iterationDest;
+	private long changeTimeStart;
+	private final long ITERCHANGE_DURATION = 100;
+	private void initIterChange(IterationChanged iEvent)
+	{
+		state = MBState.CHANINGITERATION;
+		
+		iterationSrc = MAX_ITER;
+		iterationDest = iterationSrc +  iEvent.getChangeVal();
+		if(iterationDest < 1) iterationDest = 1;
+		
+		changeTimeStart = System.currentTimeMillis();
+	}
+	
+	private void updateData()
+	{
+		switch (state) {
+		case IDLE:			
+			return;
+
+		case CHANINGITERATION:
+			long ticksNow = System.currentTimeMillis() - changeTimeStart;
+			if(ticksNow >= ITERCHANGE_DURATION)
+			{
+				ticksNow = ITERCHANGE_DURATION;
+				state = MBState.IDLE;				
+			}
+			
+			double cProgres = ticksNow / (double)ITERCHANGE_DURATION;
+			MAX_ITER = iterationSrc + (int)((iterationDest - iterationSrc) * cProgres);
+
+			//if(state == MBState.IDLE)
+				setIteration(MAX_ITER); // Forcing reinitaliting of Colortable
+			
+			break;
+		}
+	}
+	
 	long startOfpressingKey = 0 ;
 	int lastKey = 0;
 	@Override
@@ -146,14 +210,13 @@ public class Mandelbrot extends FraktalProgram {
 			break;	
 		case KeyEvent.VK_ADD:
 		case KeyEvent.VK_PLUS: 
-			int mIter = MAX_ITER + 10;
-			setIteration(mIter);
+			IterationChanged cEvent = new IterationChanged(10);			
+			initIterChange(cEvent);
 			break;
 		case KeyEvent.VK_SUBTRACT:
 		case KeyEvent.VK_MINUS:
-			mIter = MAX_ITER - 10;
-			while(mIter < 1) mIter += 10;
-			setIteration(mIter);
+			cEvent = new IterationChanged(-10);			
+			initIterChange(cEvent);
 			break;
 		case KeyEvent.VK_ESCAPE:
 			startValue.setImag(0);
@@ -161,6 +224,7 @@ public class Mandelbrot extends FraktalProgram {
 			zoom = 1.;
 			center.x = -.5;
 			center.y =  .0;	
+			setIteration(50);
 			break;
 		}		
 	}

@@ -3,8 +3,8 @@ package de.otori.mandelbrot.mandelbrotEvents;
 import de.otori.engine.animation.AnimationEvent;
 
 public class IterationChanged implements AnimationEvent {
-
-	private int changeVal;
+	
+	private int changeVal;	
 	
 	public IterationChanged(int changeVal)
 	{

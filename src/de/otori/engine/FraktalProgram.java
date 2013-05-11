@@ -6,6 +6,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import de.otori.engine.animation.AnimationEvent;
+import de.otori.engine.animation.ShiftEvent;
+import de.otori.engine.animation.ZoomEvent;
+
 
 public abstract class FraktalProgram implements Renderable, KeyListener, MouseListener, MouseMotionListener {
 
@@ -18,7 +22,7 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	protected int winWidth;
 	protected int winHeight;		
 	
-	private enum ProgramState {IDLE, ZOOMING, SHIFTING};		
+	private enum ProgramState {IDLE, ZOOMING, SHIFTING, NOTIDLE}; // NOTIDLE is for subclasses to tell that they are doing something		
 	private ProgramState state = ProgramState.IDLE; // For sample zooming implementation
 	
 	public void setWindowSize(int width, int height)
@@ -39,6 +43,19 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 		//Feel free to overide HEHE
 	}
 	
+	@Override
+	public void handleEvent(AnimationEvent event)
+	{
+		if(event instanceof ZoomEvent)
+		{
+			initZoom((ZoomEvent) event);
+		}
+		if(event instanceof ShiftEvent)
+		{
+			initShift((ShiftEvent) event);
+		}
+	}
+	
 	public void setZoom(double z)
 	{
 		zoom = z;
@@ -56,15 +73,13 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	private double zoomStart;
 	private double zoomDest;
 	private long zoomTimeStart;
-	final long ZOOM_DURATION = 400;
-	final double ZOOM_FACTOR = 2.; // to da squareee !! :D
+	private final long ZOOM_DURATION = 400;
+	private final double ZOOM_FACTOR = 2.; // to da squareee !! :D
 	/**
-	 * Internal function used for zoom animation.
-	 * @param x
-	 * @param y
-	 * @param zoomIn indicates, whether to zoom in or out.
+	 * Internal function used for zoom animation.	 
+	 * @param zEvent Zoom Event
 	 */
-	private void initZoom(int x, int y, boolean zoomIn)
+	private void initZoom( ZoomEvent zEvent) 
 	{
 		if(state != ProgramState.IDLE)
 			return;
@@ -72,15 +87,35 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 		state = ProgramState.ZOOMING;
 		
 		zCenterSrc = new Point2F(center);		
-		zCenterDest = Misc.calculatePixelRealCoordinates(x, y, winWidth, winHeight, zoom, center);		
+		zCenterDest = new Point2F(zEvent.getDest()); 		
 		zoomStart = zoom;
-		if(zoomIn)
+		if(zEvent.isZoomIn())
 			zoomDest = zoom * ZOOM_FACTOR * ZOOM_FACTOR;
 		else
 			zoomDest = zoom / ZOOM_FACTOR / ZOOM_FACTOR;
 		zoomTimeStart = System.currentTimeMillis();
 	}
 		
+	private Point2F sCenterSrc, sCenterDest;
+	private long shiftTimeStart;
+	private final long SHIFT_DURATION = 400;	
+	/**
+	 * Internal function used for shift animation.	 
+	 * @param sEvent Shift Event
+	 */
+	private void initShift( ShiftEvent sEvent)
+	{
+		if(state != ProgramState.IDLE)
+			return;
+		
+		state = ProgramState.SHIFTING;
+		
+		sCenterSrc = new Point2F(center);
+		sCenterDest = center.add(sEvent.getShiftVector());
+		
+		shiftTimeStart = System.currentTimeMillis();
+	}
+	
 	private void updatePositions()
 	{
 		switch (state) {
@@ -100,6 +135,20 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 			
 			break;
 
+		case SHIFTING:
+			
+			ticksNow = System.currentTimeMillis() - shiftTimeStart;
+			if(ticksNow >= SHIFT_DURATION)
+			{
+				ticksNow = SHIFT_DURATION;
+				state = ProgramState.IDLE;				
+			}
+			
+			double sProgres = ticksNow / (double)SHIFT_DURATION;						
+			center.y = sCenterSrc.y + (sCenterDest.y - sCenterSrc.y) * sProgres;
+			center.x = sCenterSrc.x + (sCenterDest.x - sCenterSrc.x) * sProgres;
+			
+			break;
 		default:
 			break;
 		}
@@ -113,8 +162,10 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 		{
 		case MouseEvent.BUTTON1:
 			if(System.currentTimeMillis() - lastClick < DOUBLECLICKMAXDIFF)
-			{			
-				initZoom(e.getPoint().x, e.getPoint().y, true);				
+			{		
+				Point2F dest = Misc.calculatePixelRealCoordinates(e.getX(), e.getY(), winWidth, winHeight, zoom, center);
+				ZoomEvent zEvent = new ZoomEvent(true, dest);
+				initZoom(zEvent);				
 			}
 			else
 			{
@@ -124,7 +175,9 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 		case MouseEvent.BUTTON3: 
 			if(System.currentTimeMillis() - lastClickRight < DOUBLECLICKMAXDIFF)
 			{			
-				initZoom(e.getPoint().x, e.getPoint().y, false);
+				Point2F dest = Misc.calculatePixelRealCoordinates(e.getX(), e.getY(), winWidth, winHeight, zoom, center);
+				ZoomEvent zEvent = new ZoomEvent(false, dest);
+				initZoom(zEvent);				
 			}
 			else
 			{

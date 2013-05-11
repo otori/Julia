@@ -16,5 +16,8 @@ public class Point2F {
 		y = p.y;
 	}
 	
-	
+	public Point2F add(Point2F p)
+	{
+		return new Point2F(x + p.x, y + p.y);
+	}
 }
