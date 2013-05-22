@@ -16,8 +16,8 @@ import de.otori.misc.FasterSinus;
  */
 public class AnotherFakeFraktal extends FraktalProgram {
 	private long Time ;
-	public static double Horizontal = 1;
-	public static double  Vertical =1;
+	public static float Horizontal = 1;
+	public static float  Vertical =1;
 
 
 
@@ -37,17 +37,33 @@ public class AnotherFakeFraktal extends FraktalProgram {
 	 */
 	@Override
 	public Color calcPixel(Point2F coordinate) {
+		
 		float x = (float) coordinate.x;
-		float y = (float) coordinate.y;
-
-		return   Color.getHSBColor((FasterSinus.sinDeg(Time)+1)/2, 1, 
-				(1));
+		float y = (float)- coordinate.y;
+		
+		
+		
+		float funct =  x*(Horizontal);
+	
+		
+		
+		
+		//	float funct2 = 10*FasterSinus.sin(x+Vertical+5);
+		//float funct3 = x*FasterSinus.sin(Horizontal/10);
+		if(funct<=(y+0.1) && funct>=(y-0.1))return Color.WHITE;
+		//if(funct2<=(y+0.1) && funct2>=(y-0.1))return Color.BLUE;
+		//if (funct3<=(y+10) && funct3>=(y-10))return Color.getHSBColor((float) 0.5, 1, funct3);
+		return Color.BLACK;
+		//float diff =FasterSinus.sin(x)-y;
+		//if(diff<=0  )
+		//	return Color.BLACK; 
+		 //return   Color.getHSBColor((float)0.5, 1, 1/diff);
 	}
 
 	@Override
 	public void preRendering() {
 			super.preRendering();
-			Time= (System.currentTimeMillis()/10)%10000;
+			Time= (System.currentTimeMillis()/10)%1000;
 			
 	}
 	
@@ -58,19 +74,19 @@ public class AnotherFakeFraktal extends FraktalProgram {
 
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_UP:
-			Vertical = Vertical + 0.1 * (1 / (zoom * 1.8));
+			Vertical = (float) (Vertical + 0.1 * (1 / (zoom * 1.8)));
 			break;
 		case KeyEvent.VK_DOWN:
-			Vertical = Vertical - 0.1 * (1 / (zoom * 1.8));
+			Vertical = (float) (Vertical - 0.1 * (1 / (zoom * 1.8)));
 			break;
 		case KeyEvent.VK_RIGHT:
-			Horizontal = Horizontal + 0.1 * (1 / (zoom * 1.8));
+			Horizontal = (float) (Horizontal + 0.01); //* (1 / (zoom * 1.8)));
 			break;
 		case KeyEvent.VK_LEFT:
-			Horizontal =  (Horizontal - 0.1 * (1 / (zoom * 1.8)));
+			Horizontal =  (float) (Horizontal - 0.01); //* (1 / (zoom * 1.8)));
 			break;
 		case KeyEvent.VK_ESCAPE:
-			Vertical = 0.01;
+			Vertical = (float) 0.01;
 			zoom = 1;
 			center.x = 0;
 			center.y = 0;

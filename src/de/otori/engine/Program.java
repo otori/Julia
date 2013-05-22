@@ -35,7 +35,7 @@ public class Program extends JPanel{
 		
 	//	currentFraktal = Mandelbrot.MBFraktal;
 	//	currentFraktal = Ljapunow.LjFraktal;
-		currentFraktal = AnotherFakeFraktal.FakeFraktal;
+		currentFraktal = FakeFraktal.FakeFraktal;
 		currentFraktal.setWindowSize(width, height);
 		renderer = new Renderer(currentFraktal, mbImage, iThreads, new Dimension(160,160));
 		
