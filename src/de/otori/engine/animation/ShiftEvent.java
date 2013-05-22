@@ -4,6 +4,10 @@ import de.otori.engine.Point2F;
 
 public class ShiftEvent implements AnimationEvent{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2561702320065665334L;
 	private Point2F shiftVector;
 	
 	public ShiftEvent (Point2F shiftVector)

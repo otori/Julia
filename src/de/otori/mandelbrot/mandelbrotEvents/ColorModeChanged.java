@@ -5,6 +5,10 @@ import de.otori.mandelbrot.Mandelbrot.ColorMode;
 
 public class ColorModeChanged implements AnimationEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5667698916402618116L;
 	private ColorMode cMode;
 	
 	public ColorModeChanged(ColorMode cMode)

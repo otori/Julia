@@ -1,6 +1,8 @@
 package de.otori.engine.animation;
 
-public interface AnimationEvent {
+import java.io.Serializable;
+
+public interface AnimationEvent extends Serializable{
 
 	//void :)
 	

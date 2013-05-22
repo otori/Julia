@@ -1,6 +1,13 @@
 package de.otori.engine;
 
-public class Point2F {
+import java.io.Serializable;
+
+public class Point2F implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 52958166169832913L;
+	
 	public double x;
 	public double y;
 	

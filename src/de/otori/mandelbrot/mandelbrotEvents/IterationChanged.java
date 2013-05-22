@@ -4,6 +4,10 @@ import de.otori.engine.animation.AnimationEvent;
 
 public class IterationChanged implements AnimationEvent {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4361116688972988319L;
 	private int changeVal;	
 	
 	public IterationChanged(int changeVal)

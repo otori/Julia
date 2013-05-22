@@ -142,7 +142,7 @@ public class Mandelbrot extends FraktalProgram {
 		
 		if (event instanceof IterationChanged)
 		{
-			
+			initIterChange(((IterationChanged)event));
 		}
 		if (event instanceof ColorModeChanged)
 		{

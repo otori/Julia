@@ -4,6 +4,10 @@ import de.otori.engine.Point2F;
 
 public class ZoomEvent implements AnimationEvent{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3411594764075395416L;
 	private boolean zoomIn;
 	private Point2F dest;
 	

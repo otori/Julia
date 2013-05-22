@@ -77,7 +77,7 @@ public class Program extends JPanel{
 		{		
 			int imWidth = 800, imHeight = 600;
 			
-			Program mbProgram = new Program(imWidth, imHeight, 8);
+			Program mbProgram = new Program(imWidth, imHeight, 12);
 			final JFrame frame = new JFrame("Mandelbrot / Julia");		
 		    frame.add(mbProgram);
 		           

@@ -6,7 +6,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import de.otori.engine.animation.Animation;
 import de.otori.engine.animation.AnimationEvent;
+import de.otori.engine.animation.AnimationSaveLoader;
 import de.otori.engine.animation.ShiftEvent;
 import de.otori.engine.animation.ZoomEvent;
 
@@ -24,6 +26,9 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	
 	private enum ProgramState {IDLE, ZOOMING, SHIFTING, NOTIDLE}; // NOTIDLE is for subclasses to tell that they are doing something		
 	private ProgramState state = ProgramState.IDLE; // For sample zooming implementation
+	
+	protected Animation currentAnimation;
+	private boolean eventRecording = false; 
 	
 	public void setWindowSize(int width, int height)
 	{
@@ -46,6 +51,8 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	@Override
 	public void handleEvent(AnimationEvent event)
 	{
+		if (eventRecording)
+			currentAnimation.addEvent(event);
 		if(event instanceof ZoomEvent)
 		{
 			initZoom((ZoomEvent) event);
@@ -200,6 +207,7 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	}
 	
 	private Point2F centerPressed = null, centerStart = null;
+	private boolean centerMoved = false; 
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -211,14 +219,21 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	@Override	
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+		if(centerPressed != null && centerMoved == true)
+		{
+			ShiftEvent shift = new ShiftEvent(new Point2F(center.x - centerStart.x, center.y - centerStart.y));
+			currentAnimation.addEvent(shift);
+		}
 		centerPressed = null;
+		centerMoved = false;
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 		if(centerPressed != null && state == ProgramState.IDLE)
-		{			
+		{		
+			centerMoved = true;			
 			Point2F curPos = Misc.calculatePixelRealCoordinates(e.getPoint().x, e.getPoint().y, winWidth, winHeight, zoom, center);
 			
 			double deltaReal = (curPos.x - centerPressed.x) / 1.25;
@@ -238,7 +253,15 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+		switch(e.getKeyCode())
+		{
+		case KeyEvent.VK_R:			
+			startRecording();
+			break;
+		case KeyEvent.VK_E:
+			stopRecording();
+			break;
+		}
 	}
 	
 	@Override
@@ -251,6 +274,30 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	
+	public boolean isEventRecording() {
+		return eventRecording;
 	}	
 	
+	private void startRecording()
+	{
+		System.out.println("Recording started...");
+		
+		currentAnimation = new Animation();
+		eventRecording = true;
+	}
+	
+	private void stopRecording()
+	{
+		if(!eventRecording)
+			return;
+		
+		eventRecording = false;
+		String filename = AnimationSaveLoader.scanDir("animations", "fraktal");
+		AnimationSaveLoader.SaveAnimation("animations", filename, currentAnimation);
+
+		System.out.println(String.format("Animation saved (%s) started...", filename));
+	}
 }
