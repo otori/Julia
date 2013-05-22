@@ -8,6 +8,7 @@ import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 import de.otori.engine.FraktalProgram;
 import de.otori.engine.Point2F;
 import de.otori.misc.ColorFun;
+import de.otori.misc.FasterSinus;
 
 /**
  *  offers methods to compute whether a point is colored or black
@@ -70,6 +71,13 @@ public class Mandelbrot extends FraktalProgram {
 	{
 		MAX_ITER = iter;
 		initColors();
+	}
+	
+	@Override
+	public void preRendering() {
+		super.preRendering();
+		if(System.currentTimeMillis()%30000<15000)startValue.setReal(startValue.getReal() + (0.01*(1/(zoom*1.8))));
+		else startValue.setReal(startValue.getReal() - (0.01*(1/(zoom*1.8))));
 	}
 	
 	/**

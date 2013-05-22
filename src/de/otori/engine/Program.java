@@ -33,9 +33,9 @@ public class Program extends JPanel{
 		
 		mbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 		
-	//	currentFraktal = Mandelbrot.MBFraktal;
+		currentFraktal = Mandelbrot.MBFraktal;
 	//	currentFraktal = Ljapunow.LjFraktal;
-		currentFraktal = FakeFraktal.FakeFraktal;
+	//	currentFraktal = FakeFraktal.FakeFraktal;
 		currentFraktal.setWindowSize(width, height);
 		renderer = new Renderer(currentFraktal, mbImage, iThreads, new Dimension(160,160));
 		
@@ -78,7 +78,7 @@ public class Program extends JPanel{
 			CommandLineProgram.cmdMain(args);		//Instead of using a lame GUI :D
 		else
 		{		
-			int imWidth = 800, imHeight = 600;
+			int imWidth = 1024, imHeight = 768;
 			
 			Program mbProgram = new Program(imWidth, imHeight, 8);
 			final JFrame frame = new JFrame("Mandelbrot / Julia");		
