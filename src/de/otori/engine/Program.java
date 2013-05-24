@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
@@ -13,15 +15,17 @@ import de.a.fakefraktal.FakeFraktal;
 import de.a.ljapunow.Ljapunow;
 import de.otori.mandelbrot.Mandelbrot;
 
-public class Program extends JPanel{
+public class Program extends JPanel implements KeyListener{
 
 	
 	
 	private static final long serialVersionUID = 1L;
 	private final BufferedImage mbImage;
 	private int width, height;
-	private final Renderer renderer;	
+	private Renderer renderer;	
 
+	private FraktalProgram[] fraktals = {Mandelbrot.MBFraktal, Ljapunow.LjFraktal, FakeFraktal.FakeFraktal, AnotherFakeFraktal.FakeFraktal};
+	private int iFraktalIndex = 0;
 	FraktalProgram currentFraktal;
 	
 	public Program(final int winWidth, final int winHeight, final int iThreads)
@@ -33,15 +37,14 @@ public class Program extends JPanel{
 		
 		mbImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 		
-		currentFraktal = Mandelbrot.MBFraktal;
-	//	currentFraktal = Ljapunow.LjFraktal;
-	//	currentFraktal = FakeFraktal.FakeFraktal;
-		currentFraktal.setWindowSize(width, height);
-		renderer = new Renderer(currentFraktal, mbImage, iThreads, new Dimension(160,160));
+		currentFraktal = fraktals[iFraktalIndex];
 		
-		addKeyListener(currentFraktal);		
-		addMouseListener((FraktalProgram)currentFraktal);	
-		addMouseMotionListener(currentFraktal);
+		currentFraktal.setWindowSize(width, height);
+
+		
+		addKeyListener(this);	
+		changeFraktal();
+		
 	}
 	
 	@Override
@@ -78,14 +81,14 @@ public class Program extends JPanel{
 			CommandLineProgram.cmdMain(args);		//Instead of using a lame GUI :D
 		else
 		{		
-			int imWidth = 1024, imHeight = 768;
+			int imWidth = 1024, imHeight = 780;
 			
 			Program mbProgram = new Program(imWidth, imHeight, 12);
 			final JFrame frame = new JFrame("Mandelbrot / Julia");		
 		    frame.add(mbProgram);
 		           
 		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setResizable(false);
+		    frame.setResizable(true);
 		    frame.setSize(imWidth, imHeight);
 		   
 		    
@@ -99,6 +102,42 @@ public class Program extends JPanel{
 		    
 			System.out.println("Fractal Time 1337");
 		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		addMouseListener((FraktalProgram)currentFraktal);	
+		addMouseMotionListener(currentFraktal);
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getKeyCode() == KeyEvent.VK_TAB)
+		{
+			++iFraktalIndex;
+			iFraktalIndex %= fraktals.length;
+			
+			currentFraktal = fraktals[iFraktalIndex];
+			changeFraktal();
+		}
+		else
+		currentFraktal.keyPressed(e);
+	}
+
+	private void changeFraktal() {
+		// TODO Auto-generated method stub
+		int iThreads = 8;
+		renderer = new Renderer(currentFraktal, mbImage, iThreads, new Dimension(160,160));
+		addMouseListener((FraktalProgram)currentFraktal);	
+		addMouseMotionListener(currentFraktal);
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

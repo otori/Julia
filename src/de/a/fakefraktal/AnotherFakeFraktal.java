@@ -48,11 +48,11 @@ public class AnotherFakeFraktal extends FraktalProgram {
 		
 		
 		
-		//	float funct2 = 10*FasterSinus.sin(x+Vertical+5);
-		//float funct3 = x*FasterSinus.sin(Horizontal/10);
+		float funct2 = 10*FasterSinus.sin(x+Vertical+5);
+		float funct3 = x*FasterSinus.sin(Horizontal/10);
 		if(funct<=(y+0.1) && funct>=(y-0.1))return Color.WHITE;
-		//if(funct2<=(y+0.1) && funct2>=(y-0.1))return Color.BLUE;
-		//if (funct3<=(y+10) && funct3>=(y-10))return Color.getHSBColor((float) 0.5, 1, funct3);
+		if(funct2<=(y+0.1) && funct2>=(y-0.1))return Color.BLUE;
+		if (funct3<=(y+10) && funct3>=(y-10))return Color.getHSBColor((float) 0.5, 1, funct3);
 		return Color.BLACK;
 		//float diff =FasterSinus.sin(x)-y;
 		//if(diff<=0  )
