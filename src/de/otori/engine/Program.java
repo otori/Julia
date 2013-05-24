@@ -81,7 +81,7 @@ public class Program extends JPanel implements KeyListener{
 			CommandLineProgram.cmdMain(args);		//Instead of using a lame GUI :D
 		else
 		{		
-			int imWidth = 1024, imHeight = 780;
+			int imWidth = 1920, imHeight = 1080;
 			
 			Program mbProgram = new Program(imWidth, imHeight, 8);
 			final JFrame frame = new JFrame("Mandelbrot / Julia");		
@@ -114,7 +114,7 @@ public class Program extends JPanel implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_TAB)
+		if(e.getKeyCode() == KeyEvent.VK_1)
 		{
 			++iFraktalIndex;
 			iFraktalIndex %= fraktals.length;
