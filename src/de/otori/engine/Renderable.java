@@ -2,6 +2,8 @@ package de.otori.engine;
 
 import java.awt.Color;
 
+import de.otori.engine.animation.AnimationEvent;
+
 public interface Renderable {
 	
 	/**
@@ -23,5 +25,10 @@ public interface Renderable {
 	 */
 	public void postRendering();
 
+	/**
+	 * implement to handle animation events
+	 * @param event specific event
+	 */
+	public void handleEvent(AnimationEvent event);
 	
 }
