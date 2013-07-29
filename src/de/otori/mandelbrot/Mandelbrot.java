@@ -82,6 +82,7 @@ public class Mandelbrot extends FraktalProgram {
 		super.preRendering();
 		if(System.currentTimeMillis()%30000<15000)startValue.setReal(startValue.getReal() + (0.01*(1/(zoom*1.8))));
 		else startValue.setReal(startValue.getReal() - (0.01*(1/(zoom*1.8))));
+		updateData();	
 	}
 	
 	/**
@@ -111,16 +112,11 @@ public class Mandelbrot extends FraktalProgram {
 		return iteration;
 	}
 		
-	@Override
-	public void preRendering() 
-	{
-		super.preRendering();
-		updateData();	
-	}
+
 	
 	@Override
 	public Color calcPixel(Point2F point) {
-		// TODO Auto-generated method stub
+		
 						
 		int iter = MAX_ITER;
 		

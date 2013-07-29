@@ -222,7 +222,7 @@ public abstract class FraktalProgram implements Renderable, KeyListener, MouseLi
 		if(centerPressed != null && centerMoved == true)
 		{
 			ShiftEvent shift = new ShiftEvent(new Point2F(center.x - centerStart.x, center.y - centerStart.y));
-			currentAnimation.addEvent(shift);
+			//currentAnimation.addEvent(shift);
 		}
 		centerPressed = null;
 		centerMoved = false;

@@ -75,8 +75,15 @@ public class ComplexNumber {
 	public void add(ComplexNumber cn) {
 		real += cn.real;
 		imag += cn.imag;
+	}  
+	
+	/**
+	 * add an double
+	 * @param n
+	 */
+	public void add(double n) {
+		real += n;
 	}
-
 	/**
 	 * Subtraktion für complex Number
 	 * 
@@ -86,7 +93,46 @@ public class ComplexNumber {
 		real -= cn.real;
 		imag -= cn.imag;
 	}
+	public void sub(double a) {
+		real = real-a; 
+	}
 
+
+	/**
+	 * Division
+	 */
+	public void div(ComplexNumber Divisor){
+		
+		double tmp =(Divisor.real)*(Divisor.real)+(Divisor.imag*Divisor.imag);
+		real = ((real * Divisor.real)+imag*Divisor.imag)/tmp;
+		imag = (imag*Divisor.real- real* Divisor.imag)/tmp;}
+	
+	/**
+	 * Multiplikation
+	 */
+	public void mul(ComplexNumber Faktor){
+		final double tmpReal = real * Faktor.real - imag * Faktor.imag;
+					imag = Faktor.real * imag + real * Faktor.imag;
+					real = tmpReal;
+	}
+	public void mul(Double Faktor){
+		real = real * Faktor;
+		imag = imag * Faktor;
+	}
+
+	/**
+	 * Z -> Z^n
+	 */
+	public void pot(double n){
+		while(n> 1){
+			this.mul(this);
+			n--;
+		}
+		if (n==0){
+			real=1;imag=0;
+		}
+	}
+	
 	/**
 	 * Z-> Z²
 	 */

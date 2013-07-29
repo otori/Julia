@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import de.a.fakefraktal.AnotherFakeFraktal;
 import de.a.fakefraktal.FakeFraktal;
 import de.a.ljapunow.Ljapunow;
+import de.a.newton.Newton;
 import de.otori.mandelbrot.Mandelbrot;
 
 public class Program extends JPanel implements KeyListener{
@@ -24,7 +25,7 @@ public class Program extends JPanel implements KeyListener{
 	private int width, height;
 	private Renderer renderer;	
 
-	private FraktalProgram[] fraktals = {Mandelbrot.MBFraktal, Ljapunow.LjFraktal, FakeFraktal.FakeFraktal, AnotherFakeFraktal.FakeFraktal};
+	private FraktalProgram[] fraktals = {  Newton.GenerischeEinstellungen};
 	private int iFraktalIndex = 0;
 	FraktalProgram currentFraktal;
 	
@@ -81,7 +82,7 @@ public class Program extends JPanel implements KeyListener{
 			CommandLineProgram.cmdMain(args);		//Instead of using a lame GUI :D
 		else
 		{		
-			int imWidth = 1920, imHeight = 1080;
+			int imWidth = 1024 , imHeight = 780;
 			
 			Program mbProgram = new Program(imWidth, imHeight, 12);
 			final JFrame frame = new JFrame("Mandelbrot / Julia");		
